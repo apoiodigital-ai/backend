@@ -28,6 +28,7 @@ CREATE TABLE Requisicao (
                             id_app_suportado BIGINT,
                             prompt VARCHAR(500),
                             requisitado TIMESTAMP,
+                            criacao TIMESTAMP,
                             FOREIGN KEY (id_usuario) REFERENCES Usuario(id),
                             FOREIGN KEY (id_app_suportado) REFERENCES AppSuportado(id)
 );
