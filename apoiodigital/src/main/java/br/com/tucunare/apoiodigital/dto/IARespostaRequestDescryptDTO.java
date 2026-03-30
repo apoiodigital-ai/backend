@@ -1,6 +1,7 @@
 package br.com.tucunare.apoiodigital.dto;
 
 import java.util.List;
+import java.util.UUID;
 
-public record IARespostaRequestDescryptDTO(String contexto, String pergunta, List<AndroidComponentDTO> elementos) {
+public record IARespostaRequestDescryptDTO(String contexto, String pergunta, List<AndroidComponentDTO> elementos, UUID id_requisicao) {
 }

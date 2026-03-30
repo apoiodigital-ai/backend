@@ -29,7 +29,6 @@ public class IAService {
 
     private final RespostaRepository respostaRepository;
     private final RequisicaoRepository requisicaoRepository;
-    private final CryptService cryptService;
     private final ComponenteRepository componenteRepository;
     private final ObjectMapper objectMapper;
     @Value("$(ia.base-url")
@@ -37,13 +36,11 @@ public class IAService {
     public IAService(
             RespostaRepository respostaRepository,
             RequisicaoRepository requisicaoRepository,
-            CryptService cryptService,
             ComponenteRepository componenteRepository,
             ObjectMapper objectMapper
     ) {
         this.respostaRepository = respostaRepository;
         this.requisicaoRepository = requisicaoRepository;
-        this.cryptService = cryptService;
         this.componenteRepository = componenteRepository;
         this.objectMapper = objectMapper;
     }
@@ -71,42 +68,41 @@ public class IAService {
 
         try {
             String dtoJson = objectMapper.writeValueAsString(dto);
-            String chavePublica = cryptService.getPublicKey();
-            String conteudoCriptografado =
-                    cryptService.encripty(dtoJson, chavePublica);
-
-            Componente componente =
-                    new Componente(conteudoCriptografado, chavePublica, resposta);
-
-            componenteRepository.save(componente);
-
+            Componente c = new Componente(dtoJson, resposta);
+            componenteRepository.save(c);
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public IARespostaCryptDTO acharMelhorResposta(
-            IARespostaRequestDTO iaRequestDTO
+
+    public FindBestAppResponseDTO acharMelhorApp(
+            RequisicaoInputDTO requisicaoInputDTO
+    ) {
+        try {
+            String body = objectMapper.writeValueAsString(requisicaoInputDTO);
+            String respostaIA = executarChamadaIA(body, 1);
+
+            return objectMapper.readValue(
+                    respostaIA,
+                    FindBestAppResponseDTO.class
+            );
+
+        } catch (IOException | InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    public IARespostaRawDTO acharMelhorResposta(
+            IARespostaRequestDescryptDTO requestDTO
     ) {
         Requisicao requisicao = requisicaoRepository
-                .findById(iaRequestDTO.id_requisicao())
+                .findById(requestDTO.id_requisicao())
                 .orElseThrow(RequisicaoDoesNotExistException::new);
 
         try {
-            String conteudoDescriptografado =
-                    cryptService.descrypt(
-                            iaRequestDTO.textCrypted(),
-                            iaRequestDTO.key()
-                    );
-
-            IARespostaRequestDescryptDTO requestDTO =
-                    objectMapper.readValue(
-                            conteudoDescriptografado,
-                            IARespostaRequestDescryptDTO.class
-                    );
-
+            String body = objectMapper.writeValueAsString(requestDTO);
             String respostaIA =
-                    executarChamadaIA(conteudoDescriptografado, 2);
+                    executarChamadaIA(body, 2);
 
             IARespostaRawDTO rawResponse =
                     objectMapper.readValue(respostaIA, IARespostaRawDTO.class);
@@ -120,28 +116,7 @@ public class IAService {
                     rawResponse.viewID()
             );
 
-            String novaChave = cryptService.getPublicKey();
-            String respostaCriptografada =
-                    cryptService.encripty(respostaIA, novaChave);
-
-            return new IARespostaCryptDTO(novaChave, respostaCriptografada);
-
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public FindBestAppResponseDTO acharMelhorApp(
-            RequisicaoInputDTO requisicaoInputDTO
-    ) {
-        try {
-            String body = objectMapper.writeValueAsString(requisicaoInputDTO);
-            String respostaIA = executarChamadaIA(body, 1);
-
-            return objectMapper.readValue(
-                    respostaIA,
-                    FindBestAppResponseDTO.class
-            );
+            return rawResponse;
 
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);

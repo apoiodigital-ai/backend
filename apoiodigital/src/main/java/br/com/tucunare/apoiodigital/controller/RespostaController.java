@@ -1,7 +1,8 @@
 package br.com.tucunare.apoiodigital.controller;
 
-import br.com.tucunare.apoiodigital.dto.IARespostaCryptDTO;
+import br.com.tucunare.apoiodigital.dto.IARespostaRawDTO;
 import br.com.tucunare.apoiodigital.dto.IARespostaRequestDTO;
+import br.com.tucunare.apoiodigital.dto.IARespostaRequestDescryptDTO;
 import br.com.tucunare.apoiodigital.service.IAService;
 import br.com.tucunare.apoiodigital.service.RespostaService;
 
@@ -28,10 +29,10 @@ public class RespostaController {
     }
 
     @PostMapping("/exigir")
-    public ResponseEntity<IARespostaCryptDTO> exigirRespostaDaIA(
-            @RequestBody IARespostaRequestDTO request
+    public ResponseEntity<IARespostaRawDTO> exigirRespostaDaIA(
+            @RequestBody IARespostaRequestDescryptDTO request
     ) {
-        IARespostaCryptDTO resposta = iaService.acharMelhorResposta(request);
+        IARespostaRawDTO resposta = iaService.acharMelhorResposta(request);
         return ResponseEntity.ok(resposta);
     }
 

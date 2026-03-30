@@ -22,19 +22,15 @@ public class Componente {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
-    @Column(name = "conteud_cript")
-    private String conteudo_criptografado;
-
-    @Column(name = "chave_publica")
-    private String chave_publica;
+    @Column(name = "conteudo")
+    private String conteudo;
 
     @ManyToOne
     @JoinColumn(name = "id_resposta", columnDefinition = "VARCHAR(36)")
     private Resposta resposta;
 
-    public Componente(String conteudo_criptografado, String chave_publica, Resposta resposta) {
-        this.conteudo_criptografado = conteudo_criptografado;
-        this.chave_publica = chave_publica;
+    public Componente(String conteudo, Resposta resposta) {
+        this.conteudo = conteudo;
         this.resposta = resposta;
     }
 }

@@ -15,16 +15,13 @@ public class ComponenteService {
 
     private final ComponenteRepository componenteRepository;
     private final RespostaRepository respostaRepository;
-    private final CryptService cryptService;
 
     public ComponenteService(
             ComponenteRepository componenteRepository,
-            RespostaRepository respostaRepository,
-            CryptService cryptService
+            RespostaRepository respostaRepository
     ) {
         this.componenteRepository = componenteRepository;
         this.respostaRepository = respostaRepository;
-        this.cryptService = cryptService;
     }
 
     public List<Componente> salvar(List<Componente> componentes) {
