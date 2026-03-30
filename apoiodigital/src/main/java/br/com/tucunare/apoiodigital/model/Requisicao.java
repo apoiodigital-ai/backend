@@ -33,7 +33,6 @@ public class Requisicao {
     @Column(name="prompt")
     private String prompt;
 
-    @Column(name="timeStamp")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
     private LocalDateTime criacao;
 
