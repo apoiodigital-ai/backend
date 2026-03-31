@@ -1,4 +1,6 @@
 package br.com.tucunare.apoiodigital.dto;
 
-public record RequisicaoComparasionResponseDTO(String matched_id, String origin_id, String prompt) {
+import java.util.UUID;
+
+public record RequisicaoComparasionResponseDTO(UUID matched_id, UUID origin_id, String prompt) {
 }

@@ -21,6 +21,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -78,12 +79,15 @@ public class RequisicaoService {
 
         Usuario usuario = usuarioRepository.findById(dto.id_usuario())
                 .orElseThrow(UsuarioDoesNotExistException::new);
-
+        Optional<Requisicao> p = compararRequisicoes(dto);
+        if(p.isPresent()){
+            Requisicao requisicao = criarRequisicao(usuario, dto.prompt(), p.get().getAppSuportado());
+            return requisicaoRepository.save(requisicao);
+        }
         AppSuportado appSuportado = appSuportadoRepository.findById(1L)
                 .orElseThrow(() -> new IllegalStateException("AppSuportado não encontrado"));
 
-        Requisicao requisicao = criarRequisicao(usuario, dto.pergunta(), appSuportado);
-
+        Requisicao requisicao = criarRequisicao(usuario, dto.prompt(), appSuportado);
         return requisicaoRepository.save(requisicao);
     }
 
@@ -92,32 +96,43 @@ public class RequisicaoService {
         return requisicaoRepository.findByUsuario(usuario);
     }
 
-    public RequisicaoComparasionResponseDTO compararRequisicoes(
-            RequisicaoComparasionRequestDTO dto
+    public Optional<Requisicao> compararRequisicoes(
+            RequisicaoInputDTO dto
     ) {
-
-        ObjectMapper objectMapper = new ObjectMapper();
-
-        try {
-            String json = objectMapper.writeValueAsString(dto);
-
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create("http://localhost:5000/requisicao/comparar"))
-                    .header("Content-Type", "application/json")
-                    .POST(HttpRequest.BodyPublishers.ofString(json))
-                    .build();
-
-            HttpClient client = HttpClient.newHttpClient();
-            HttpResponse<String> response =
-                    client.send(request, HttpResponse.BodyHandlers.ofString());
-
-            return objectMapper.readValue(
-                    response.body(),
-                    RequisicaoComparasionResponseDTO.class
-            );
-
-        } catch (IOException | InterruptedException e) {
-            throw new IllegalStateException("Erro ao comparar requisições", e);
-        }
+        Optional<Requisicao> l = requisicaoRepository.findFirstByPromptOrderByCriacaoDesc(dto.prompt());
+        return l;
     }
+
+
+
+
+
+
+
+
+
+
+//
+//        ObjectMapper objectMapper = new ObjectMapper();
+//
+//        try {
+//            String json = objectMapper.writeValueAsString(dto);
+//
+//            HttpRequest request = HttpRequest.newBuilder()
+//                    .uri(URI.create("http://localhost:5000/requisicao/comparar"))
+//                    .header("Content-Type", "application/json")
+//                    .POST(HttpRequest.BodyPublishers.ofString(json))
+//                    .build();
+//
+//            HttpClient client = HttpClient.newHttpClient();
+//            HttpResponse<String> response =
+//                    client.send(request, HttpResponse.BodyHandlers.ofString());
+//
+//            return objectMapper.readValue(
+//                    response.body(),
+//                    RequisicaoComparasionResponseDTO.class
+//            );
+//
+//        } catch (IOException | InterruptedException e) {
+//            throw new IllegalStateException("Erro ao comparar requisições", e);
 }
