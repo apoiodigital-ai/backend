@@ -47,9 +47,6 @@ public class UsuarioService {
 
     public Usuario salvarUsuario(Usuario usuario) {
 
-        var usuarioExiste =
-                usuarioRepository.findByTelefone(usuario.getTelefone()).isPresent();
-
         if (usuarioRepository.findByTelefone(usuario.getTelefone()).isPresent()) {
             throw new TelefoneAlreayExistsException();
         }

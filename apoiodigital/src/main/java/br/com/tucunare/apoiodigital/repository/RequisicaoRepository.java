@@ -10,5 +10,5 @@ import java.util.UUID;
 
 public interface RequisicaoRepository extends JpaRepository<Requisicao, UUID> {
     List<Requisicao> findByUsuario(Usuario usuario);
-    Optional<Requisicao> findFirstByPromptOrderByCriacaoDesc(String prompt);
+    Optional<Requisicao> findFirstByPromptAndUsuarioOrderByCriacaoDesc(String prompt, Usuario usuario);
 }

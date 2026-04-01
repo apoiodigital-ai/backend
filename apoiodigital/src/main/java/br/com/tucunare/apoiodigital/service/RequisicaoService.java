@@ -79,8 +79,10 @@ public class RequisicaoService {
 
         Usuario usuario = usuarioRepository.findById(dto.id_usuario())
                 .orElseThrow(UsuarioDoesNotExistException::new);
-        Optional<Requisicao> p = compararRequisicoes(dto);
+
+        Optional<Requisicao> p = compararRequisicoes(dto.prompt(), usuario);
         if(p.isPresent()){
+
             Requisicao requisicao = criarRequisicao(usuario, dto.prompt(), p.get().getAppSuportado());
             return requisicaoRepository.save(requisicao);
         }
@@ -97,10 +99,9 @@ public class RequisicaoService {
     }
 
     public Optional<Requisicao> compararRequisicoes(
-            RequisicaoInputDTO dto
+            String prompt, Usuario usuario
     ) {
-        Optional<Requisicao> l = requisicaoRepository.findFirstByPromptOrderByCriacaoDesc(dto.prompt());
-        return l;
+        return requisicaoRepository.findFirstByPromptAndUsuarioOrderByCriacaoDesc(prompt, usuario);
     }
 
 
