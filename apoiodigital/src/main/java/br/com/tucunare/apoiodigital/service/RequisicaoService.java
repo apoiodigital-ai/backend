@@ -1,8 +1,6 @@
 package br.com.tucunare.apoiodigital.service;
 
-import br.com.tucunare.apoiodigital.dto.RequisicaoComparasionRequestDTO;
-import br.com.tucunare.apoiodigital.dto.RequisicaoComparasionResponseDTO;
-import br.com.tucunare.apoiodigital.dto.RequisicaoInputDTO;
+import br.com.tucunare.apoiodigital.dto.*;
 import br.com.tucunare.apoiodigital.exception.AppSuportadoNotFoundException;
 import br.com.tucunare.apoiodigital.model.AppSuportado;
 import br.com.tucunare.apoiodigital.model.Requisicao;
@@ -29,22 +27,23 @@ public class RequisicaoService {
 
     private final RequisicaoRepository requisicaoRepository;
     private final UsuarioRepository usuarioRepository;
-    private final IAService iaService;
+    private final GeminiService geminiService;
     private final AppSuportadoRepository appSuportadoRepository;
     private final AtalhoService atalhoService;
     private final UsuarioService usuarioService;
 
+
     public RequisicaoService(
             RequisicaoRepository requisicaoRepository,
             UsuarioRepository usuarioRepository,
-            IAService iaService,
+            GeminiService geminiService,
             AppSuportadoRepository appSuportadoRepository,
             AtalhoService atalhoService,
             UsuarioService usuarioService
     ) {
         this.requisicaoRepository = requisicaoRepository;
         this.usuarioRepository = usuarioRepository;
-        this.iaService = iaService;
+        this.geminiService = geminiService;
         this.appSuportadoRepository = appSuportadoRepository;
         this.atalhoService = atalhoService;
         this.usuarioService = usuarioService;
@@ -81,16 +80,29 @@ public class RequisicaoService {
                 .orElseThrow(UsuarioDoesNotExistException::new);
 
         Optional<Requisicao> p = compararRequisicoes(dto.prompt(), usuario);
-        if(p.isPresent()){
+        if(p.isPresent()){ // achou req semelhante
 
             Requisicao requisicao = criarRequisicao(usuario, dto.prompt(), p.get().getAppSuportado());
             return requisicaoRepository.save(requisicao);
-        }
-        AppSuportado appSuportado = appSuportadoRepository.findById(1L)
-                .orElseThrow(() -> new IllegalStateException("AppSuportado não encontrado"));
 
-        Requisicao requisicao = criarRequisicao(usuario, dto.prompt(), appSuportado);
-        return requisicaoRepository.save(requisicao);
+        }else{ // IA precisa definir melhor app
+
+            List<AppSuportadoToGeminiDTO> apps_banco = appSuportadoRepository.findAllApps();
+            RequestInputToGeminiDTO geminiDto = new RequestInputToGeminiDTO(dto.prompt(), apps_banco, dto.lista_apps_instalados());
+            FindBestAppResponseDTO bestApp = geminiService.acharMelhorApp(geminiDto);
+
+            Optional<AppSuportado> appSuportado = appSuportadoRepository.findById(bestApp.id_app_banco());
+
+            if(appSuportado.isPresent()){
+                Requisicao requisicao = criarRequisicao(usuario, dto.prompt(), appSuportado.get());
+                return requisicaoRepository.save(requisicao);
+            }else {
+                throw new RuntimeException("Gemini Falhou!!!!!! AppSuportado não existe!");
+            }
+
+
+        }
+
     }
 
     public List<Requisicao> carregarRequisicaoPeloAccessTokenUsuario(String token) {
