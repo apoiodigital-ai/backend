@@ -179,43 +179,39 @@ public class GeminiService {
                 "CASO o aplicativo esteja instalado:\n" +
                 "O contexto DEVE seguir o padrão:\n" +
                 "\"usuário abriu o aplicativo <nome do app> para <objetivo final>\"\n" +
-                "Exemplos válidos:\n" +
-                "- \"usuário abriu o aplicativo iFood para pedir pizza\"\n" +
-                "- \"usuário abriu o aplicativo Uber para solicitar uma corrida\"\n" +
-                "- \"usuário abriu o aplicativo Mercado Livre para comprar um produto\"\n" +
                 "\n" +
                 "CASO o aplicativo NÃO esteja instalado:\n" +
                 "O contexto DEVE obrigatoriamente seguir o padrão:\n" +
-                "\"Usuário abriu o aplicativo da Play Store para baixar o <nome do app do banco>. Após instalar, o objetivo é <objetivo final>.\"\n" +
-                "Exemplos válidos:\n" +
-                "- \"usuário abriu o aplicativo da Play Store para baixar o iFood. após instalar, o objetivo é pedir pizza de calabresa\"\n" +
-                "- \"usuário abriu o aplicativo da Play Store para baixar o Uber. após instalar, o objetivo é solicitar uma corrida para a casa de seu neto\"\n" +
-                "\n" +
-                "O contexto deve:\n" +
-                "- Ser específico (não genérico)\n" +
-                "- Representar uma ação concreta\n" +
-                "- Incluir explicitamente o nome do aplicativo\n" +
-                "- Indicar claramente o objetivo final do usuário\n" +
+                "\"usuário abriu o aplicativo da Play Store para baixar o <nome do app do banco>. Após instalar, o objetivo é <objetivo final>.\"\n" +
                 "\n" +
                 "Com base no contexto, selecione o id_app_banco mais adequado dentro de lista_apps_banco.\n" +
+                "\n" +
                 "Verifique se o id_app_banco está presente em lista_apps_instalados:\n" +
                 "Se estiver, defina id_app_instalado com o id desse mesmo app instalado.\n" +
+                "\n" +
                 "Caso não esteja, busque em lista_apps_instalados um aplicativo funcionalmente equivalente:\n" +
                 "Priorize compatibilidade semântica direta (mesma categoria e finalidade).\n" +
-                "Se encontrar, defina id_app_instalado como o id do app instalado (pode ser diferente do id_app_banco).\n" +
-                "***IMPORTANTE: Se o aplicativo escolhido do banco não estiver instalado E não houver equivalente:\n" +
-                "Defina o id_app_instalado como o id do aplicativo Play Store presente em lista_apps_instalados.\n" +
+                "Se encontrar, defina id_app_instalado como o id do app instalado.\n" +
+                "\n" +
+                "***REGRA CRÍTICA (ANTI-NULL):\n" +
+                "Se NÃO encontrar aplicativo equivalente:\n" +
+                "- Você DEVE obrigatoriamente localizar o aplicativo Play Store dentro de lista_apps_instalados.\n" +
+                "- A Play Store é identificada por:\n" +
+                "  nome contendo \"playstore\" OU pacote \"com.android.vending\".\n" +
+                "- Defina id_app_instalado como o id desse aplicativo.\n" +
+                "- É PROIBIDO retornar null ou vazio.\n" +
                 "\n" +
                 "Formato de saída (obrigatório):\n" +
                 "{\n" +
                 "  \"contexto\": \"<contexto>\",\n" +
                 "  \"id_app_banco\": \"<id selecionado do banco>\",\n" +
-                "  \"id_app_instalado\": \"<id correspondente ou id da Play Store>\"\n" +
+                "  \"id_app_instalado\": \"<id correspondente>\"\n" +
                 "}\n" +
                 "\n" +
                 "RESPONDA APENAS EM JSON\n" +
                 "Retorne exclusivamente o JSON no formato especificado.\n" +
                 "Restrições:\n" +
+                "NUNCA retorne null.\n" +
                 "NUNCA USE: ```json\n" +
                 "Não forneça explicações, justificativas ou qualquer texto adicional.\n" +
                 "Não invente aplicativos fora das listas fornecidas.";
