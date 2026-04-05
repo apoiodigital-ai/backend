@@ -56,25 +56,17 @@ public class GeminiService {
                 "\n" +
                 "Princípios fundamentais:\n" +
                 "\n" +
-                "Primazia da Intenção:\n" +
+                "Intenção:\n" +
                 "Toda decisão deve emergir da correta interpretação semântica do prompt do usuário.\n" +
                 "A intenção deve ser reduzida a uma ação objetiva (ex: “pedir comida” → “usar serviço de delivery”).\n" +
-                "\n" +
-                "Correspondência Funcional:\n" +
-                "O aplicativo ideal (id_app_banco) deve ser escolhido com base na aderência direta à funcionalidade requerida.\n" +
-                "A relação entre intenção e aplicativo deve ser inequívoca, evitando associações genéricas ou indiretas.\n" +
                 "\n" +
                 "Otimização por Disponibilidade:\n" +
                 "Sempre priorize aplicativos já instalados no dispositivo.\n" +
                 "A execução imediata (menor fricção operacional) é preferível à instalação de novos aplicativos.\n" +
                 "\n" +
                 "Equivalência Semântica:\n" +
-                "Na ausência do aplicativo ideal, selecione um substituto que desempenhe a mesma função essencial.\n" +
+                "Na ausência do componente ideal, selecione um substituto que desempenhe a mesma função essencial.\n" +
                 "A equivalência deve ser baseada na finalidade, não na marca ou nome.\n" +
-                "\n" +
-                "Fallback Determinístico:\n" +
-                "Caso não exista nenhum aplicativo compatível instalado, utilize o id_app_banco como referência de redirecionamento.\n" +
-                "Isso implica encaminhar o usuário à Play Store para aquisição da ferramenta necessária.\n" +
                 "\n" +
                 "Consistência Estrutural:\n" +
                 "Toda decisão deve preservar rastreabilidade entre:\n" +
@@ -178,19 +170,31 @@ public class GeminiService {
                 "Entrada:\n" +
                 "prompt: descrição livre do que o usuário deseja fazer\n" +
                 "lista_apps_banco: conjunto de aplicativos ideais suportados (ids e descrições)\n" +
-                "lista_apps_instalados: conjunto de aplicativos disponíveis no dispositivo (ids e pacotes)\n" +
+                "lista_apps_instalados: conjunto de aplicativos disponíveis no dispositivo (ids, nomes e pacotes)\n" +
                 "\n" +
                 "Regra de decisão:\n" +
                 "Analise o prompt e extraia:\n" +
-                "contexto: descrição objetiva da etapa do processo em que o usuário se encontra\n" +
+                "contexto: descrição detalhada, concreta e operacional da etapa exata do fluxo dentro do aplicativo.\n" +
+                "O contexto DEVE seguir o padrão:\n" +
+                "\"usuário está na etapa de <ação específica> no aplicativo <nome do app> para <objetivo final>\"\n" +
+                "Exemplos válidos:\n" +
+                "- \"usuário está na etapa de selecionar o restaurante no aplicativo iFood para pedir comida\"\n" +
+                "- \"usuário está na etapa de escolher o endereço de destino no aplicativo Uber para solicitar uma corrida\"\n" +
+                "- \"usuário está na etapa de buscar um produto no aplicativo Mercado Livre para realizar uma compra\"\n" +
+                "O contexto deve:\n" +
+                "- Ser específico (não genérico como 'abrir app' ou 'usar app')\n" +
+                "- Representar uma ação concreta dentro do fluxo\n" +
+                "- Incluir explicitamente o nome do aplicativo escolhido\n" +
+                "- Indicar claramente o objetivo final do usuário\n" +
+                "\n" +
                 "Com base no contexto, selecione o id_app_banco mais adequado dentro de lista_apps_banco.\n" +
                 "Verifique se o id_app_banco está presente em lista_apps_instalados:\n" +
                 "Se estiver, defina id_app_instalado com o id desse mesmo app instalado.\n" +
                 "Caso não esteja, busque em lista_apps_instalados um aplicativo funcionalmente equivalente:\n" +
                 "Priorize compatibilidade semântica direta (mesma categoria e finalidade).\n" +
                 "Se encontrar, defina id_app_instalado como o id do app instalado (pode ser diferente do id_app_banco).\n" +
-                "Se nenhum aplicativo compatível estiver disponível:\n" +
-                "Utilize o id_app_banco e id_app_instalado como os correspondentes da Play Store (na tabela do AppSuportados e o instalado no celular respectivamente, ambos representam o ID da Play Store para redirecionamento).\n" +
+                "***IMPORTANTE: Se o aplicativo escolhido do banco não estiver instalado:\n" +
+                "Defina o id_app_instalado como o correspondente da Play Store na lista dos apps instalados.\n" +
                 "\n" +
                 "Formato de saída (obrigatório):\n" +
                 "{\n" +
@@ -199,9 +203,10 @@ public class GeminiService {
                 "  \"id_app_instalado\": \"<id correspondente ou id da Play Store>\"\n" +
                 "}\n" +
                 "\n" +
-                "RESPONDA APENAS EM JSON" +
+                "RESPONDA APENAS EM JSON\n" +
                 "Retorne exclusivamente o JSON no formato especificado.\n" +
                 "Restrições:\n" +
+                "NUNCA USE: ```json\n" +
                 "Não forneça explicações, justificativas ou qualquer texto adicional.\n" +
                 "Não invente aplicativos fora das listas fornecidas.";
 
