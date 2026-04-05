@@ -3,7 +3,9 @@ package br.com.tucunare.apoiodigital.controller;
 import br.com.tucunare.apoiodigital.dto.ErroResponseDTO;
 import br.com.tucunare.apoiodigital.dto.RequisicaoInputDTO;
 import br.com.tucunare.apoiodigital.dto.RequisicaoResponseDTO;
+import br.com.tucunare.apoiodigital.dto.SaveRequisicaoResponseDTO;
 import br.com.tucunare.apoiodigital.model.Requisicao;
+import br.com.tucunare.apoiodigital.service.AtalhoService;
 import br.com.tucunare.apoiodigital.service.RequisicaoService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
@@ -19,17 +21,20 @@ import java.util.List;
 public class RequisicaoController {
 
     private final RequisicaoService requisicaoService;
+    private final AtalhoService atalhoService;
 
-    public RequisicaoController(RequisicaoService requisicaoService) {
+    public RequisicaoController(RequisicaoService requisicaoService, AtalhoService atalhoService) {
         this.requisicaoService = requisicaoService;
+        this.atalhoService = atalhoService;
     }
 
     @PostMapping("/enviar")
-    public ResponseEntity<Requisicao> enviarRequisicao(
+    public ResponseEntity<SaveRequisicaoResponseDTO> enviarRequisicao(
             @RequestBody RequisicaoInputDTO dto
     ) {
-        Requisicao requisicao = requisicaoService.salvarRequisicao(dto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(requisicao);
+        SaveRequisicaoResponseDTO requisicaoResponse = requisicaoService.salvarRequisicao(dto);
+        atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.id_req_match());
+        return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoResponse);
     }
 
     @GetMapping("/carregar")

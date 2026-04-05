@@ -6,6 +6,8 @@ import br.com.tucunare.apoiodigital.dto.RequestInputToGeminiDTO;
 import br.com.tucunare.apoiodigital.dto.RequisicaoInputDTO;
 import br.com.tucunare.apoiodigital.model.AppSuportado;
 import br.com.tucunare.apoiodigital.repository.AppSuportadoRepository;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -104,7 +106,68 @@ public class GeminiService {
                 )).temperature(temp)
                 .build();
     }
-    
+
+    public String definirTituloAtalho(String prompt){
+        String additionalRules = "Contexto e Papel:\n" +
+                "Você é um especialista em acessibilidade digital e suporte tecnológico para o público idoso. Sua tarefa é ler mensagens de usuários (idosos) pedindo ajuda para usar funções do celular ou aplicativos. Você deve extrair a intenção principal e transformá-la em um título curto, claro e objetivo, que servirá de nome para um tutorial interativo.\n" +
+                "\n" +
+                "Regras:\n" +
+                "\n" +
+                "Seja Breve e Claro: O título deve ter entre 2 e 6 palavras. Use uma linguagem simples, evitando jargões técnicos complexos (ex: use \"Aumentar a letra\" em vez de \"Ajustar DPI da fonte\").\n" +
+                "\n" +
+                "Foque na Ação Central: Identifique o que o usuário quer aprender a fazer no celular.\n" +
+                "\n" +
+                "Ignore Excessos: Descarte cordialidades, histórias de fundo e explicações longas (\"meu neto mandou\", \"não consigo enxergar\", \"por favor\").\n" +
+                "\n" +
+                "Tom Prático: O título deve indicar claramente a tarefa que será ensinada no tutorial. Comece preferencialmente com um verbo no infinitivo (ex: Aprender, Fazer, Salvar, Aumentar).\n" +
+                "\n" +
+                "Exemplos de Entrada e Saída:\n" +
+                "\n" +
+                "Entrada: \"A letrinha do meu celular tá muito pequena, não consigo ler as mensagens direito, me ajuda a aumentar por favor.\"\n" +
+                "\n" +
+                "Título: Aumentar o tamanho da letra\n" +
+                "\n" +
+                "Entrada: \"Meu neto me mandou uma foto linda no WhatsApp ontem, mas eu não sei como guardar ela na minha galeria.\"\n" +
+                "\n" +
+                "Título: Salvar foto do WhatsApp\n" +
+                "\n" +
+                "Entrada: \"Queria muito aprender a fazer aquela chamada com vídeo para ver minha família no domingo.\"\n" +
+                "\n" +
+                "Título: Fazer chamada de vídeo\n" +
+                "\n" +
+                "Entrada: \"Sumiu aquele desenho do aplicativo do banco da minha tela inicial, como eu coloco de volta lá?\"\n" +
+                "\n" +
+                "Título: Colocar aplicativo na tela inicial\n" +
+                "\n" +
+                "Entrada: \"Como eu faço pra colocar o despertador pra tocar de manhã cedo?\"\n" +
+                "\n" +
+                "Título: Configurar o despertador\n" +
+                "\n" +
+                "Instrução Final:\n" +
+                "Abaixo está o pedido de ajuda do usuário. Retorne apenas o título gerado, sem pontuação final, sem aspas ou qualquer texto adicional." +
+                "REPONDA APENAS EM JSON. Formato de saída obrigatório: " + "\n" +
+                "{\n" +
+                "\"titulo\": \"<titulo>\"\n" +
+                "}" ;
+
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        GenerateContentConfig config = generateConfig(additionalRules, 0.1f);
+
+        try {
+            String response = analyzeText(prompt, config);
+
+            JsonNode jsonNode = objectMapper.readTree(response);
+
+            String titulo = jsonNode.get("titulo").asText();
+
+            System.out.println("\nTITULO DO ATALHO CRIADO: " + titulo);
+
+            return titulo;
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     public FindBestAppResponseDTO acharMelhorApp(RequestInputToGeminiDTO dto) {
         ObjectMapper objectMapper = new ObjectMapper();
@@ -120,7 +183,6 @@ public class GeminiService {
                 "Regra de decisão:\n" +
                 "Analise o prompt e extraia:\n" +
                 "contexto: descrição objetiva da etapa do processo em que o usuário se encontra\n" +
-                "titulo: resumo curto da intenção principal\n" +
                 "Com base no contexto, selecione o id_app_banco mais adequado dentro de lista_apps_banco.\n" +
                 "Verifique se o id_app_banco está presente em lista_apps_instalados:\n" +
                 "Se estiver, defina id_app_instalado com o id desse mesmo app instalado.\n" +
@@ -133,7 +195,6 @@ public class GeminiService {
                 "Formato de saída (obrigatório):\n" +
                 "{\n" +
                 "  \"contexto\": \"<contexto>\",\n" +
-                "  \"titulo\": \"<titulo>\",\n" +
                 "  \"id_app_banco\": \"<id selecionado do banco>\",\n" +
                 "  \"id_app_instalado\": \"<id correspondente ou id da Play Store>\"\n" +
                 "}\n" +
@@ -141,7 +202,6 @@ public class GeminiService {
                 "RESPONDA APENAS EM JSON" +
                 "Retorne exclusivamente o JSON no formato especificado.\n" +
                 "Restrições:\n" +
-                "NUNCA USE: ```json" +
                 "Não forneça explicações, justificativas ou qualquer texto adicional.\n" +
                 "Não invente aplicativos fora das listas fornecidas.";
 
@@ -153,7 +213,7 @@ public class GeminiService {
 
             String response = analyzeText(input, config);
 
-            System.out.println("RESPONSE MERDA DA IA: \n" + response);
+            System.out.println("RESPONSE DA IA: \n" + response);
 
             FindBestAppResponseDTO bestApp = objectMapper.readValue(
                     response,

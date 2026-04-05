@@ -6,6 +6,7 @@ import br.com.tucunare.apoiodigital.model.AppSuportado;
 import br.com.tucunare.apoiodigital.model.Requisicao;
 import br.com.tucunare.apoiodigital.model.Usuario;
 import br.com.tucunare.apoiodigital.repository.AppSuportadoRepository;
+import br.com.tucunare.apoiodigital.repository.AtalhoRepository;
 import br.com.tucunare.apoiodigital.repository.RequisicaoRepository;
 import br.com.tucunare.apoiodigital.repository.UsuarioRepository;
 import br.com.tucunare.apoiodigital.exception.UsuarioDoesNotExistException;
@@ -29,7 +30,7 @@ public class RequisicaoService {
     private final UsuarioRepository usuarioRepository;
     private final GeminiService geminiService;
     private final AppSuportadoRepository appSuportadoRepository;
-    private final AtalhoService atalhoService;
+    private final AtalhoRepository atalhoRepository;
     private final UsuarioService usuarioService;
 
 
@@ -37,15 +38,14 @@ public class RequisicaoService {
             RequisicaoRepository requisicaoRepository,
             UsuarioRepository usuarioRepository,
             GeminiService geminiService,
-            AppSuportadoRepository appSuportadoRepository,
-            AtalhoService atalhoService,
+            AppSuportadoRepository appSuportadoRepository, AtalhoRepository atalhoRepository,
             UsuarioService usuarioService
     ) {
         this.requisicaoRepository = requisicaoRepository;
         this.usuarioRepository = usuarioRepository;
         this.geminiService = geminiService;
         this.appSuportadoRepository = appSuportadoRepository;
-        this.atalhoService = atalhoService;
+        this.atalhoRepository = atalhoRepository;
         this.usuarioService = usuarioService;
     }
     private Requisicao criarRequisicao(Usuario u, String prompt, AppSuportado app){
@@ -74,28 +74,32 @@ public class RequisicaoService {
         return requisicaoRepository.saveAll(requisicoes);
     }
 
-    public Requisicao salvarRequisicao(RequisicaoInputDTO dto) {
+    public SaveRequisicaoResponseDTO salvarRequisicao(RequisicaoInputDTO dto) {
 
         Usuario usuario = usuarioRepository.findById(dto.id_usuario())
                 .orElseThrow(UsuarioDoesNotExistException::new);
 
+        List<AppSuportadoToGeminiDTO> apps_banco = appSuportadoRepository.findAllApps();
+        RequestInputToGeminiDTO geminiDto = new RequestInputToGeminiDTO(dto.prompt(), apps_banco, dto.lista_apps_instalados());
+        FindBestAppResponseDTO bestApp = geminiService.acharMelhorApp(geminiDto);
+
         Optional<Requisicao> p = compararRequisicoes(dto.prompt(), usuario);
         if(p.isPresent()){ // achou req semelhante
 
-            Requisicao requisicao = criarRequisicao(usuario, dto.prompt(), p.get().getAppSuportado());
-            return requisicaoRepository.save(requisicao);
+            Requisicao requisicao = new Requisicao (usuario, dto.prompt(), p.get().getAppSuportado());
+            Requisicao requisicaoDb = requisicaoRepository.save(requisicao);
 
-        }else{ // IA precisa definir melhor app
+            return new SaveRequisicaoResponseDTO(requisicaoDb, bestApp.contexto(), bestApp.id_app_instalado(), p.get().getId());
 
-            List<AppSuportadoToGeminiDTO> apps_banco = appSuportadoRepository.findAllApps();
-            RequestInputToGeminiDTO geminiDto = new RequestInputToGeminiDTO(dto.prompt(), apps_banco, dto.lista_apps_instalados());
-            FindBestAppResponseDTO bestApp = geminiService.acharMelhorApp(geminiDto);
+        }else{ // IA precisa definir titulo de atalho
 
             Optional<AppSuportado> appSuportado = appSuportadoRepository.findById(bestApp.id_app_banco());
 
             if(appSuportado.isPresent()){
-                Requisicao requisicao = criarRequisicao(usuario, dto.prompt(), appSuportado.get());
-                return requisicaoRepository.save(requisicao);
+                Requisicao requisicao = new Requisicao(usuario, dto.prompt(), appSuportado.get());
+                Requisicao requisicaoDb = requisicaoRepository.save(requisicao);
+
+                return new SaveRequisicaoResponseDTO(requisicaoDb, bestApp.contexto(), bestApp.id_app_instalado(), null);
             }else {
                 throw new RuntimeException("Gemini Falhou!!!!!! AppSuportado não existe!");
             }

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -21,15 +22,18 @@ public class AtalhoService {
     private final AtalhoRepository atalhoRepository;
     private final RequisicaoRepository requisicaoRepository;
     private final UsuarioRepository usuarioRepository;
+    private final GeminiService geminiService;
+
 
     public AtalhoService(
             AtalhoRepository atalhoRepository,
             RequisicaoRepository requisicaoRepository,
-            UsuarioRepository usuarioRepository
+            UsuarioRepository usuarioRepository, GeminiService geminiService
     ) {
         this.atalhoRepository = atalhoRepository;
         this.requisicaoRepository = requisicaoRepository;
         this.usuarioRepository = usuarioRepository;
+        this.geminiService = geminiService;
     }
 
     public Atalho findById(UUID id) {
@@ -59,9 +63,17 @@ public class AtalhoService {
         );
     }
 
-    public Atalho criarAtalho(UUID idRequisicao, String titulo) {
-        Requisicao requisicao = requisicaoRepository.findById(idRequisicao)
-                .orElseThrow(RequisicaoDoesNotExistException::new);
+    public Atalho criarAtalho(Requisicao requisicao, UUID id_req_match) {
+
+
+        if(id_req_match != null){
+            Requisicao reqMatch = requisicaoRepository.findById(id_req_match).orElseThrow(RequisicaoDoesNotExistException::new);
+            Atalho opAtalho = atalhoRepository.findByRequisicao(reqMatch).orElseThrow(AtalhoDoesNotExistException::new);
+            Atalho atalho = new Atalho(requisicao, opAtalho.getTitulo());
+            return atalhoRepository.save(atalho);
+        }
+
+        String titulo = geminiService.definirTituloAtalho(requisicao.getPrompt());
 
         Atalho atalho = new Atalho(requisicao, titulo);
         return atalhoRepository.save(atalho);

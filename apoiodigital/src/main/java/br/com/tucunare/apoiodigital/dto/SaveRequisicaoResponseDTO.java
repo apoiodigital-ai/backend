@@ -1,4 +1,8 @@
 package br.com.tucunare.apoiodigital.dto;
 
-public record SaveRequisicaoResponseDTO(Integer id_app_lista, String matched_id_req) {
+import br.com.tucunare.apoiodigital.model.Requisicao;
+
+import java.util.UUID;
+
+public record SaveRequisicaoResponseDTO(Requisicao requisicao, String contexto, Long id_app_instalado, UUID id_req_match) {
 }

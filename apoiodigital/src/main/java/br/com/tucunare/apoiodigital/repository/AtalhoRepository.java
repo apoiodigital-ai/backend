@@ -1,11 +1,13 @@
 package br.com.tucunare.apoiodigital.repository;
 
 import br.com.tucunare.apoiodigital.model.Atalho;
+import br.com.tucunare.apoiodigital.model.Requisicao;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface AtalhoRepository extends JpaRepository<Atalho, UUID> {
@@ -17,4 +19,6 @@ public interface AtalhoRepository extends JpaRepository<Atalho, UUID> {
         ORDER BY a.criacao DESC
     """)
     List<Atalho> findByRequisicaoUsuarioId(@Param("usuarioId") UUID usuarioId);
+
+    Optional<Atalho> findByRequisicao(Requisicao requisicao);
 }
