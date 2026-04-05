@@ -175,16 +175,26 @@ public class GeminiService {
                 "Regra de decisão:\n" +
                 "Analise o prompt e extraia:\n" +
                 "contexto: descrição detalhada, concreta e operacional da etapa exata do fluxo dentro do aplicativo.\n" +
+                "\n" +
+                "CASO o aplicativo esteja instalado:\n" +
                 "O contexto DEVE seguir o padrão:\n" +
-                "\"usuário está na etapa de <ação específica> no aplicativo <nome do app> para <objetivo final>\"\n" +
+                "\"usuário abriu o aplicativo <nome do app> para <objetivo final>\"\n" +
                 "Exemplos válidos:\n" +
-                "- \"usuário está na etapa de selecionar o restaurante no aplicativo iFood para pedir comida\"\n" +
-                "- \"usuário está na etapa de escolher o endereço de destino no aplicativo Uber para solicitar uma corrida\"\n" +
-                "- \"usuário está na etapa de buscar um produto no aplicativo Mercado Livre para realizar uma compra\"\n" +
+                "- \"usuário abriu o aplicativo iFood para pedir pizza\"\n" +
+                "- \"usuário abriu o aplicativo Uber para solicitar uma corrida\"\n" +
+                "- \"usuário abriu o aplicativo Mercado Livre para comprar um produto\"\n" +
+                "\n" +
+                "CASO o aplicativo NÃO esteja instalado:\n" +
+                "O contexto DEVE obrigatoriamente seguir o padrão:\n" +
+                "\"Usuário abriu o aplicativo da Play Store para baixar o <nome do app do banco>. Após instalar, o objetivo é <objetivo final>.\"\n" +
+                "Exemplos válidos:\n" +
+                "- \"usuário abriu o aplicativo da Play Store para baixar o iFood. após instalar, o objetivo é pedir pizza de calabresa\"\n" +
+                "- \"usuário abriu o aplicativo da Play Store para baixar o Uber. após instalar, o objetivo é solicitar uma corrida para a casa de seu neto\"\n" +
+                "\n" +
                 "O contexto deve:\n" +
-                "- Ser específico (não genérico como 'abrir app' ou 'usar app')\n" +
-                "- Representar uma ação concreta dentro do fluxo\n" +
-                "- Incluir explicitamente o nome do aplicativo escolhido\n" +
+                "- Ser específico (não genérico)\n" +
+                "- Representar uma ação concreta\n" +
+                "- Incluir explicitamente o nome do aplicativo\n" +
                 "- Indicar claramente o objetivo final do usuário\n" +
                 "\n" +
                 "Com base no contexto, selecione o id_app_banco mais adequado dentro de lista_apps_banco.\n" +
@@ -193,8 +203,8 @@ public class GeminiService {
                 "Caso não esteja, busque em lista_apps_instalados um aplicativo funcionalmente equivalente:\n" +
                 "Priorize compatibilidade semântica direta (mesma categoria e finalidade).\n" +
                 "Se encontrar, defina id_app_instalado como o id do app instalado (pode ser diferente do id_app_banco).\n" +
-                "***IMPORTANTE: Se o aplicativo escolhido do banco não estiver instalado:\n" +
-                "Defina o id_app_instalado como o correspondente da Play Store na lista dos apps instalados.\n" +
+                "***IMPORTANTE: Se o aplicativo escolhido do banco não estiver instalado E não houver equivalente:\n" +
+                "Defina o id_app_instalado como o id do aplicativo Play Store presente em lista_apps_instalados.\n" +
                 "\n" +
                 "Formato de saída (obrigatório):\n" +
                 "{\n" +
