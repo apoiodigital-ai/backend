@@ -33,7 +33,7 @@ public class GeminiService {
     @Autowired
     private AppSuportadoRepository appSuportadoRepository;
 
-    @Value("AIzaSyAAvzBmNJlpqH4ABRALUscvr2xF2g5nyFs")
+    @Value("KEY HERE")
     private String apiKey;
 
     @Value("gemini-2.5-flash-lite")
