@@ -28,7 +28,7 @@ public class Atalho {
     @JsonIgnore
     private Requisicao requisicao;
 
-    @Column(name = "titulo", length = 30, nullable = false)
+    @Column(name = "titulo", nullable = false)
     private String titulo;
 
     //fora do banco

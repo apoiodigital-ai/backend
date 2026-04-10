@@ -9,6 +9,7 @@
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/AndroidComponentDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/AndroidComponentWithoutViewIdDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/AppRequestDTO.java
+/Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/AppSuportadoToGeminiDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/ComparacaoRequestDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/ErroResponseDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/ExceptionDTO.java
@@ -19,6 +20,7 @@
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/IARespostaRequestDescryptDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/RefreshDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/RelatedAppsCheckDTO.java
+/Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/RequestInputToGeminiDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/RequisicaoComparasionRequestDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/RequisicaoComparasionResponseDTO.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/dto/RequisicaoInputDTO.java
@@ -51,7 +53,7 @@
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/service/AtalhoService.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/service/CleanerTokenService.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/service/ComponenteService.java
-/Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/service/CryptService.java
+/Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/service/GeminiService.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/service/IAService.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/service/JwtService.java
 /Users/paulocosta/Documents/ApoioDigital/backend/apoiodigital/src/main/java/br/com/tucunare/apoiodigital/service/RefreshTokenService.java

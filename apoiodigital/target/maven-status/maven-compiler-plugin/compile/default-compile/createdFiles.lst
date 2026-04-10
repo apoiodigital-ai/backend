@@ -7,7 +7,6 @@ br/com/tucunare/apoiodigital/dto/ComparacaoRequestDTO.class
 br/com/tucunare/apoiodigital/controller/ComponenteController.class
 br/com/tucunare/apoiodigital/exception/AppSuportadoNotFoundException.class
 br/com/tucunare/apoiodigital/model/AppSuportado.class
-br/com/tucunare/apoiodigital/service/CryptService.class
 br/com/tucunare/apoiodigital/dto/IARespostaRequestDTO.class
 br/com/tucunare/apoiodigital/dto/RequisicaoComparasionRequestDTO.class
 br/com/tucunare/apoiodigital/dto/UsuarioDTO.class
@@ -21,8 +20,10 @@ br/com/tucunare/apoiodigital/service/ComponenteService.class
 br/com/tucunare/apoiodigital/service/CleanerTokenService.class
 br/com/tucunare/apoiodigital/repository/RefreshTokenRepository.class
 br/com/tucunare/apoiodigital/service/RefreshTokenService.class
+br/com/tucunare/apoiodigital/dto/RequestInputToGeminiDTO.class
 br/com/tucunare/apoiodigital/dto/IARespostaRequestDescryptDTO.class
 br/com/tucunare/apoiodigital/service/IAService.class
+br/com/tucunare/apoiodigital/service/GeminiService.class
 br/com/tucunare/apoiodigital/exception/RequisicaoDoesNotExistException.class
 br/com/tucunare/apoiodigital/controller/RequisicaoController.class
 br/com/tucunare/apoiodigital/exception/UsuarioDoesNotExistException.class
@@ -57,4 +58,5 @@ br/com/tucunare/apoiodigital/model/Componente.class
 br/com/tucunare/apoiodigital/exception/TelefoneAlreayExistsException.class
 br/com/tucunare/apoiodigital/repository/AppSuportadoRepository.class
 br/com/tucunare/apoiodigital/model/Atalho.class
+br/com/tucunare/apoiodigital/dto/AppSuportadoToGeminiDTO.class
 br/com/tucunare/apoiodigital/service/RespostaService.class
