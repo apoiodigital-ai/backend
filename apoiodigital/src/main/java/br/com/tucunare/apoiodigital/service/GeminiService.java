@@ -74,7 +74,9 @@ public class GeminiService {
     public String getRules(String filepath){
         try{
             Path caminho = Path.of(filepath);
-            return Files.readString(caminho);
+            String rule = Files.readString(caminho);
+            System.out.println(rule);
+            return rule;
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

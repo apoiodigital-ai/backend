@@ -7,7 +7,6 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="apoiodigital (1)" />
       </profile>
       <profile name="Annotation profile for apoiodigital" enabled="true">
         <sourceOutputDir name="target/generated-sources/annotations" />
@@ -21,12 +20,15 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="apoiodigital (1)" target="1.5" />
+      <module name="apoiodigital (1)" target="21" />
+      <module name="apoiodigital (2)" target="21" />
     </bytecodeTargetLevel>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="apoiodigital" options="-parameters" />
+      <module name="apoiodigital (1)" options="-parameters" />
+      <module name="apoiodigital (2)" options="-parameters" />
     </option>
   </component>
 </project>
