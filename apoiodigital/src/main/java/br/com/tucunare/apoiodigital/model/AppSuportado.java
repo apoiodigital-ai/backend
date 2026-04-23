@@ -26,4 +26,7 @@ public class AppSuportado {
     @Column(name = "situacao")
     private String situacao;
 
+    @Column(name = "pacote")
+    private String pacote;
+
 }

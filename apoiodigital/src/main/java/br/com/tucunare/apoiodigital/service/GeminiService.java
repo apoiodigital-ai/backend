@@ -1,6 +1,7 @@
 package br.com.tucunare.apoiodigital.service;
 
 import br.com.tucunare.apoiodigital.dto.*;
+import br.com.tucunare.apoiodigital.enums.IAAgent2ModoEnum;
 import br.com.tucunare.apoiodigital.model.AppSuportado;
 import br.com.tucunare.apoiodigital.repository.AppSuportadoRepository;
 import com.fasterxml.jackson.databind.JsonMappingException;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
+import java.util.Objects;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -109,10 +111,27 @@ public class GeminiService {
             throw new RuntimeException(e);
         }
     }
+    //agente 0
+    //o A0 valida o prompt do usuario impedindo jailbreaks e requests nocivos
+    public boolean agent0(String prompt){
+        ObjectMapper objectMapper = new ObjectMapper();
+        String rules = getRules("src/main/resources/rules/agent0-rule.txt");
+        GenerateContentConfig config = generateConfig(rules, 0f);
+        try{
+            String input = objectMapper.writeValueAsString(prompt);
+            String r = analyzeText(input, config);
+            JsonNode jsonNode = objectMapper.readTree(r);
+            boolean n = jsonNode.get("aprovado").asBoolean();
+            if(!n){return false;}
+            else{return true;}
+        }catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     // Simplifica o prompt vindo do usuário e retorna prompt_limpo.
     // o A1 reduz o prompt do usuário em prompts mais objetivos e menos complexos para os próximos agentes
-    public String simplificarPrompt(String prompt){ // A1
+    public String agent1(String prompt){ // A1
         ObjectMapper objectMapper = new ObjectMapper();
 
         String rules = getRules("src/main/resources/rules/simplifyPrompt-rule.txt");
@@ -134,6 +153,71 @@ public class GeminiService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+    }
+    //Agente 2
+    //Agente que acha o id do app instalado que condiz com o prompt (limpo)
+    public Integer agent2(IAAgent2RequestDTO dto){
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String rules = getRules("src/main/resources/rules/agent2-rule.txt");
+
+        GenerateContentConfig config = generateConfig(rules, 0f);
+
+        try{
+            String input = objectMapper.writeValueAsString(dto);
+
+            String response = analyzeText(input, config);
+
+            JsonNode jsonNode = objectMapper.readTree(response);
+
+            JsonNode p = jsonNode.get("id_app_instalado");
+
+            if(p.canConvertToInt()){
+                return p.asInt();
+            }else{
+                return -1;
+            }
+
+        }catch (JsonProcessingException e) {
+
+            throw new RuntimeException(e);
+
+        }
+
+    }
+
+
+    //Agente 3
+    //A3
+    public Integer agent3(IAAgent3RequestDTO dto){
+        ObjectMapper objectMapper = new ObjectMapper();
+
+        String rules = getRules("src/main/resources/rules/agent3-rule.txt");
+
+        GenerateContentConfig config = generateConfig(rules, 0f);
+
+        try{
+            String input = objectMapper.writeValueAsString(dto);
+
+            String response = analyzeText(input, config);
+
+            JsonNode jsonNode = objectMapper.readTree(response);
+
+            JsonNode id_app_banco = jsonNode.get("id_app_banco");
+            //select x.package id_app_instalado = select y.package id_app_banco
+
+            if(id_app_banco.canConvertToInt()){
+                return jsonNode.get("id_app_banco").asInt();
+            }else{
+                return -1;
+            }
+
+        }catch (JsonProcessingException e) {
+
+            throw new RuntimeException(e);
+
+        }
+
     }
 
     // O GenerateContextAppDTO exige prompt_limpo, nome_app_instalado e nome_app_banco
@@ -169,47 +253,48 @@ public class GeminiService {
     // A ideia é reunir todos os agentes e definir o fluxo definido (A0 -> A1 -> A2 -> A3 -> A4 -> A5) aqui
     // NOTA: CRIAR OUTRA FUNCAO PARA A2 E A3... acharMelhorApp agora se refere à ação como um toodo.
     public FindBestAppResponseDTO acharMelhorApp(RequestInputToGeminiDTO dto) {
+        //lista app banco
+        List<AppSuportado> lista_app_suportado = appSuportadoRepository.findAll();
+
         ObjectMapper objectMapper = new ObjectMapper();
 
-//        List<AppSuportadoToGeminiDTO> lista_apps_banco = appSuportadoRepository.findAllApps();
+        if(!agent0(dto.prompt())){return null;}
 
-        String additionalRules = getRules("src/main/resources/rules/findBestApp-rules.txt");
+        String prompt = agent1(dto.prompt());
 
-        try{
-            String input = objectMapper.writeValueAsString(dto);
+        IAAgent2RequestDTO iaAgent2RequestDTO = new IAAgent2RequestDTO(prompt, dto.lista_apps_instalados(), IAAgent2ModoEnum.inicial);
 
-            GenerateContentConfig config = generateConfig(additionalRules, 0.1f);
+        Integer id_app_instalado = agent2(iaAgent2RequestDTO);
 
-            String response = analyzeText(input, config);
+        boolean f = false;
 
-            System.out.println("RESPONSE DA IA: \n" + response);
-
-            FindBestAppResponseDTO bestApp = objectMapper.readValue(
-                    response,
-                    FindBestAppResponseDTO.class
-            );
-
-            return bestApp;
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+        for (AppSuportado appSuportado : lista_app_suportado) {
+            String x = dto.lista_apps_instalados().get(id_app_instalado - 1).pacote();
+            String y = appSuportado.getPacote();
+            if (Objects.equals(x, y)) {
+                f = true; break; //O(N²)
+            }
+        }if(!f){
+            IAAgent3RequestDTO iaAgent3RequestDTO = new IAAgent3RequestDTO(dto.lista_apps_instalados().get(id_app_instalado - 1).pacote(), lista_app_suportado);
+            Integer id_app_banco = agent3(iaAgent3RequestDTO);
+            boolean achou = false;
+            Integer id_play_store = -1;
+            for (AppRequestDTO appRequestDTO : dto.lista_apps_instalados()) {
+                if(Objects.equals(appRequestDTO.pacote(), "com.android.vending")){
+                    id_play_store = appRequestDTO.id();
+                }
+                if(Objects.equals(lista_app_suportado.get(id_app_banco).getPacote(), appRequestDTO.pacote())){
+                    achou = true;
+                    id_app_instalado = appRequestDTO.id();
+                }
+            }
+            if(!achou){
+                id_app_instalado = id_play_store;
+            }
         }
 
-
-
-        // gerar config -> additionalRules
-        // gere um contexto baseado no appSuportado e no prompt; gere um titulo de no maximo 5 palavras...
-
-
-//      {
-//            "prompt": quero pedir comida
-//            "apps_instalados": [
-//                     { "id": 1, "nome": ifood},
-//                      ...
-//                    ]
-//            "id_usuario": jir29jfo3oo1o1k-492JJWOPA0
-//        }
-
-
+        //ag4
+    return null;
     }
 
 

@@ -1,7 +1,6 @@
 package br.com.tucunare.apoiodigital.controller;
 
 import br.com.tucunare.apoiodigital.dto.IARespostaRawDTO;
-import br.com.tucunare.apoiodigital.dto.IARespostaRequestDTO;
 import br.com.tucunare.apoiodigital.dto.IARespostaRequestDescryptDTO;
 import br.com.tucunare.apoiodigital.service.IAService;
 import br.com.tucunare.apoiodigital.service.RespostaService;
