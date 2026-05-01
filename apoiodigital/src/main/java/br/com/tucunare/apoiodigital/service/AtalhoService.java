@@ -13,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -63,20 +62,21 @@ public class AtalhoService {
         );
     }
 
-    public Atalho criarAtalho(Requisicao requisicao, UUID id_req_match) {
+    public void criarAtalho(Requisicao requisicao, UUID id_req_match) {
 
 
         if(id_req_match != null){
             Requisicao reqMatch = requisicaoRepository.findById(id_req_match).orElseThrow(RequisicaoDoesNotExistException::new);
             Atalho opAtalho = atalhoRepository.findByRequisicao(reqMatch).orElseThrow(AtalhoDoesNotExistException::new);
             Atalho atalho = new Atalho(requisicao, opAtalho.getTitulo());
-            return atalhoRepository.save(atalho);
+            atalhoRepository.save(atalho);
+            return;
         }
 
         String titulo = geminiService.definirTituloAtalho(requisicao.getPrompt());
 
         Atalho atalho = new Atalho(requisicao, titulo);
-        return atalhoRepository.save(atalho);
+        atalhoRepository.save(atalho);
     }
 
     public Requisicao iniciarAtalho(UUID idAtalho) {

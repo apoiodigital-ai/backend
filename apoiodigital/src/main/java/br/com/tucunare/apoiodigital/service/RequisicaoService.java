@@ -85,7 +85,7 @@ public class RequisicaoService {
         FindBestAppResponseDTO bestApp = geminiService.acharMelhorApp(geminiDto);
 
         Optional<Requisicao> p = compararRequisicoes(dto.prompt(), usuario);
-        if(p.isPresent() && Objects.equals(p.get().getAppSuportado().getId(), bestApp.id_app_instalado())){ // achou req semelhante
+        if(p.isPresent() && Objects.equals(p.get().getAppSuportado().getId(), bestApp.id_app_banco())){ // achou req semelhante
             Requisicao requisicao = new Requisicao (usuario, dto.prompt(), p.get().getAppSuportado());
             Requisicao requisicaoDb = requisicaoRepository.save(requisicao);
 

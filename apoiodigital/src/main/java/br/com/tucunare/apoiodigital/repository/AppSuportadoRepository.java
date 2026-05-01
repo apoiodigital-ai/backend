@@ -13,5 +13,5 @@ public interface AppSuportadoRepository extends JpaRepository<AppSuportado, Long
     @Query("SELECT new br.com.tucunare.apoiodigital.dto.AppSuportadoToGeminiDTO(a.id, a.nome) FROM AppSuportado a")
     List<AppSuportadoToGeminiDTO> findAllApps();
 
-    Optional<AppSuportado> findByPacote();
+    Optional<AppSuportado> findByPacote(String pacote);
 }

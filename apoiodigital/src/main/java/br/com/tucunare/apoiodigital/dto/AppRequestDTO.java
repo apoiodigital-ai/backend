@@ -1,4 +1,4 @@
 package br.com.tucunare.apoiodigital.dto;
 
-public record   AppRequestDTO(Integer id, String app, String pacote) {
+public record   AppRequestDTO(Long id, String nome, String pacote) {
 }

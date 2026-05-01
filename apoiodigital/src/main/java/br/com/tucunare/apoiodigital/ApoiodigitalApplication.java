@@ -8,9 +8,8 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-
 @EnableScheduling
-@SpringBootApplication(exclude = {SecurityAutoConfiguration.class})
+@SpringBootApplication(exclude = { SecurityAutoConfiguration.class })
 public class ApoiodigitalApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(ApoiodigitalApplication.class, args);
@@ -20,6 +19,5 @@ public class ApoiodigitalApplication {
 	public PasswordEncoder getPasswordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
-
 
 }

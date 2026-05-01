@@ -6,6 +6,7 @@ import br.com.tucunare.apoiodigital.model.AppSuportado;
 import br.com.tucunare.apoiodigital.repository.AppSuportadoRepository;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -61,6 +62,7 @@ public class GeminiService {
                     input,
                     config
             );
+            System.out.println("RESPONSE TEXT: " + response.text());
             return response.text();
         } catch (Exception e) {
             // Handle rate limits (429) or connection issues
@@ -72,7 +74,7 @@ public class GeminiService {
         try{
             Path caminho = Path.of(filepath);
             String rule = Files.readString(caminho);
-            System.out.println(rule);
+//            System.out.println(rule);
             return rule;
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -116,11 +118,17 @@ public class GeminiService {
     public boolean agent0(String prompt){
         ObjectMapper objectMapper = new ObjectMapper();
         String rules = getRules("src/main/resources/rules/agent0-rule.txt");
-        GenerateContentConfig config = generateConfig(rules, 0f);
+        GenerateContentConfig config = generateConfig(rules, 0.1f);
         try{
-            String input = objectMapper.writeValueAsString(prompt);
+            ObjectNode json = objectMapper.createObjectNode();
+            json.put("prompt", prompt);
+
+            String input = json.toString();
+
             String r = analyzeText(input, config);
+
             JsonNode jsonNode = objectMapper.readTree(r);
+
             boolean n = jsonNode.get("aprovado").asBoolean();
             if(!n){return false;}
             else{return true;}
@@ -139,7 +147,10 @@ public class GeminiService {
         GenerateContentConfig config = generateConfig(rules, 0.1f);
 
         try {
-            String input = objectMapper.writeValueAsString(prompt);
+            ObjectNode json = objectMapper.createObjectNode();
+            json.put("prompt", prompt);
+
+            String input = json.toString();
 
             String response = analyzeText(input, config);
 
@@ -156,12 +167,12 @@ public class GeminiService {
     }
     //Agente 2
     //Agente que acha o id do app instalado que condiz com o prompt (limpo)
-    public Integer agent2(IAAgent2RequestDTO dto){
+    public Long agent2(IAAgent2RequestDTO dto){
         ObjectMapper objectMapper = new ObjectMapper();
 
         String rules = getRules("src/main/resources/rules/agent2-rule.txt");
 
-        GenerateContentConfig config = generateConfig(rules, 0f);
+        GenerateContentConfig config = generateConfig(rules, 0.1f);
 
         try{
             String input = objectMapper.writeValueAsString(dto);
@@ -170,13 +181,15 @@ public class GeminiService {
 
             JsonNode jsonNode = objectMapper.readTree(response);
 
-            JsonNode p = jsonNode.get("id_app_instalado");
+            Long p = jsonNode.get("id_app_instalado").asLong();
 
-            if(p.canConvertToInt()){
-                return p.asInt();
-            }else{
-                return -1;
-            }
+            return p;
+//
+//            if(p.canConvertToLong()){
+//                return p.asLong();
+//            }else{
+//                return -1L;
+//            }
 
         }catch (JsonProcessingException e) {
 
@@ -189,12 +202,12 @@ public class GeminiService {
 
     //Agente 3
     //A3
-    public Integer agent3(IAAgent3RequestDTO dto){
+    public Long agent3(IAAgent3RequestDTO dto){
         ObjectMapper objectMapper = new ObjectMapper();
 
         String rules = getRules("src/main/resources/rules/agent3-rule.txt");
 
-        GenerateContentConfig config = generateConfig(rules, 0f);
+        GenerateContentConfig config = generateConfig(rules, 0.1f);
 
         try{
             String input = objectMapper.writeValueAsString(dto);
@@ -206,10 +219,10 @@ public class GeminiService {
             JsonNode id_app_banco = jsonNode.get("id_app_banco");
             //select x.package id_app_instalado = select y.package id_app_banco
 
-            if(id_app_banco.canConvertToInt()){
-                return jsonNode.get("id_app_banco").asInt();
+            if(id_app_banco.canConvertToLong()){
+                return jsonNode.get("id_app_banco").asLong();
             }else{
-                return -1;
+                return -1L;
             }
 
         }catch (JsonProcessingException e) {
@@ -258,43 +271,77 @@ public class GeminiService {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        if(!agent0(dto.prompt())){return null;}
+//        if(!agent0(dto.prompt())){return null;} // valida prompt
 
-        String prompt = agent1(dto.prompt());
+        String prompt = agent1(dto.prompt()); // limpa prompt
 
-        IAAgent2RequestDTO iaAgent2RequestDTO = new IAAgent2RequestDTO(prompt, dto.lista_apps_instalados(), IAAgent2ModoEnum.inicial);
+        IAAgent2RequestDTO iaAgent2RequestDTO = new IAAgent2RequestDTO(
+                prompt, dto.lista_apps_instalados(), IAAgent2ModoEnum.inicial);
 
-        Integer id_app_instalado = agent2(iaAgent2RequestDTO);
+        Long id_app_instalado = agent2(iaAgent2RequestDTO); // busca app instalado condizente
 
         boolean f = false;
+        Long id_app_banco = -1L;
+
+        for (AppRequestDTO app: dto.lista_apps_instalados()){
+            System.out.println(app.nome());
+        }
 
         for (AppSuportado appSuportado : lista_app_suportado) {
-            String x = dto.lista_apps_instalados().get(id_app_instalado - 1).pacote();
+            // verifica se o app_instalado escolhido existe no banco de dados
+            String x = dto.lista_apps_instalados().get((int) (id_app_instalado - 1)).pacote();
+
             String y = appSuportado.getPacote();
+
             if (Objects.equals(x, y)) {
-                f = true; break; //O(N²)
+
+                System.out.println("APP NO BANCO DE DADOS!!!!: " + x + id_app_instalado);
+                id_app_banco = appSuportado.getId();
+                f = true; break; // aqui diz que existe
             }
-        }if(!f){
-            IAAgent3RequestDTO iaAgent3RequestDTO = new IAAgent3RequestDTO(dto.lista_apps_instalados().get(id_app_instalado - 1).pacote(), lista_app_suportado);
-            Integer id_app_banco = agent3(iaAgent3RequestDTO);
+        }
+
+        if(!f){ // se não existe, irá chamar o agente3 para escolher app semelhante
+
+            IAAgent3RequestDTO iaAgent3RequestDTO = new IAAgent3RequestDTO(
+                    dto.lista_apps_instalados().get((int) (id_app_instalado - 1)).pacote(),
+                    lista_app_suportado);
+
+            id_app_banco = agent3(iaAgent3RequestDTO);
+
             boolean achou = false;
-            Integer id_play_store = -1;
+
+            Long id_play_store = -1L;
+
             for (AppRequestDTO appRequestDTO : dto.lista_apps_instalados()) {
+
                 if(Objects.equals(appRequestDTO.pacote(), "com.android.vending")){
+                    // aqui vamos definir o id do app_instalado referente à playStore
                     id_play_store = appRequestDTO.id();
                 }
-                if(Objects.equals(lista_app_suportado.get(id_app_banco).getPacote(), appRequestDTO.pacote())){
+
+                if(Objects.equals(lista_app_suportado.get(
+                        (int) (id_app_banco-1)).getPacote(),
+                        appRequestDTO.pacote())){
                     achou = true;
                     id_app_instalado = appRequestDTO.id();
                 }
+
             }
             if(!achou){
                 id_app_instalado = id_play_store;
             }
         }
 
-        //ag4
-    return null;
+        // agora vamos definir o contexto
+        String contexto = definirContexto(new GenerateContextAppDTO(
+                prompt,
+                lista_app_suportado.get((int) (id_app_banco-1)).getNome(),
+                dto.lista_apps_instalados().get((int) (id_app_instalado-1)).nome()
+        ));
+
+
+        return new FindBestAppResponseDTO(contexto, id_app_banco, id_app_instalado);
     }
 
 
