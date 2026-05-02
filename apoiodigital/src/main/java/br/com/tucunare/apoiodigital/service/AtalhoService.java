@@ -21,13 +21,13 @@ public class AtalhoService {
     private final AtalhoRepository atalhoRepository;
     private final RequisicaoRepository requisicaoRepository;
     private final UsuarioRepository usuarioRepository;
-    private final GeminiService geminiService;
+    private final FindBestAppService geminiService;
 
 
     public AtalhoService(
             AtalhoRepository atalhoRepository,
             RequisicaoRepository requisicaoRepository,
-            UsuarioRepository usuarioRepository, GeminiService geminiService
+            UsuarioRepository usuarioRepository, FindBestAppService geminiService
     ) {
         this.atalhoRepository = atalhoRepository;
         this.requisicaoRepository = requisicaoRepository;

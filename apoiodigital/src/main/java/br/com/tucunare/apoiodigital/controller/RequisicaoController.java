@@ -11,6 +11,7 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -29,7 +30,7 @@ public class RequisicaoController {
     }
 
     @PostMapping("/enviar")
-    public ResponseEntity<?> enviarRequisicao(
+    public ResponseEntity<SaveRequisicaoResponseDTO> enviarRequisicao(
             @RequestBody RequisicaoInputDTO dto
     ) {
         try{
@@ -37,7 +38,7 @@ public class RequisicaoController {
             atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.id_req_match());
             return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoResponse);
        }catch(RuntimeException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroResponseDTO("PROMPT_INVALIDO", e.getMessage()));
+            throw new RuntimeException(e.getMessage());
         }
 
     }

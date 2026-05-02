@@ -11,14 +11,8 @@ import br.com.tucunare.apoiodigital.repository.RequisicaoRepository;
 import br.com.tucunare.apoiodigital.repository.UsuarioRepository;
 import br.com.tucunare.apoiodigital.exception.UsuarioDoesNotExistException;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -29,7 +23,7 @@ public class RequisicaoService {
 
     private final RequisicaoRepository requisicaoRepository;
     private final UsuarioRepository usuarioRepository;
-    private final GeminiService geminiService;
+    private final FindBestAppService findBestAppService;
     private final AppSuportadoRepository appSuportadoRepository;
     private final AtalhoRepository atalhoRepository;
     private final UsuarioService usuarioService;
@@ -38,13 +32,13 @@ public class RequisicaoService {
     public RequisicaoService(
             RequisicaoRepository requisicaoRepository,
             UsuarioRepository usuarioRepository,
-            GeminiService geminiService,
+            FindBestAppService findBestAppService,
             AppSuportadoRepository appSuportadoRepository, AtalhoRepository atalhoRepository,
             UsuarioService usuarioService
     ) {
         this.requisicaoRepository = requisicaoRepository;
         this.usuarioRepository = usuarioRepository;
-        this.geminiService = geminiService;
+        this.findBestAppService = findBestAppService;
         this.appSuportadoRepository = appSuportadoRepository;
         this.atalhoRepository = atalhoRepository;
         this.usuarioService = usuarioService;
@@ -82,7 +76,7 @@ public class RequisicaoService {
 
         List<AppSuportadoToGeminiDTO> apps_banco = appSuportadoRepository.findAllApps();
         RequestInputToGeminiDTO geminiDto = new RequestInputToGeminiDTO(dto.prompt(), apps_banco, dto.lista_apps_instalados());
-        FindBestAppResponseDTO bestApp = geminiService.acharMelhorApp(geminiDto);
+        FindBestAppResponseDTO bestApp = findBestAppService.acharMelhorApp(geminiDto);
 
         Optional<Requisicao> p = compararRequisicoes(dto.prompt(), usuario);
         if(p.isPresent() && Objects.equals(p.get().getAppSuportado().getId(), bestApp.id_app_banco())){ // achou req semelhante

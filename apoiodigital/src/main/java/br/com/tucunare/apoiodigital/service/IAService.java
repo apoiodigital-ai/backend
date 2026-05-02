@@ -63,7 +63,7 @@ public class IAService {
         AndroidComponentWithoutViewIdDTO dto =
                 new AndroidComponentWithoutViewIdDTO(
                         componenteDTO.className(),
-                        componenteDTO.adicionalInfo()
+                        componenteDTO.additionalInfo()
                 );
 
         try {
@@ -75,23 +75,6 @@ public class IAService {
         }
     }
 
-
-    public FindBestAppResponseDTO acharMelhorApp(
-            RequisicaoInputDTO requisicaoInputDTO
-    ) {
-        try {
-            String body = objectMapper.writeValueAsString(requisicaoInputDTO);
-            String respostaIA = executarChamadaIA(body, 1);
-
-            return objectMapper.readValue(
-                    respostaIA,
-                    FindBestAppResponseDTO.class
-            );
-
-        } catch (IOException | InterruptedException e) {
-            throw new RuntimeException(e);
-        }
-    }
     public IARespostaRawDTO acharMelhorResposta(
             IARespostaRequestDescryptDTO requestDTO
     ) {

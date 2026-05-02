@@ -4,7 +4,6 @@ import br.com.tucunare.apoiodigital.dto.*;
 import br.com.tucunare.apoiodigital.enums.IAAgent2ModoEnum;
 import br.com.tucunare.apoiodigital.model.AppSuportado;
 import br.com.tucunare.apoiodigital.repository.AppSuportadoRepository;
-import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.google.genai.types.*;
@@ -31,7 +30,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-public class GeminiService {
+public class FindBestAppService {
 //
 //    GenerativeModel model = GenerativeModel.builder()
 //            .modelName("gemini-pro")
@@ -297,7 +296,7 @@ public class GeminiService {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-        if(!agent0(dto.prompt())){throw new RuntimeException("Mensagem Inválido");} // valida prompt
+//        if(!agent0(dto.prompt())){throw new RuntimeException("Mensagem Inválido");} // valida prompt
 
         String prompt = agent1(dto.prompt()); // limpa prompt
 
