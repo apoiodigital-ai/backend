@@ -29,12 +29,17 @@ public class RequisicaoController {
     }
 
     @PostMapping("/enviar")
-    public ResponseEntity<SaveRequisicaoResponseDTO> enviarRequisicao(
+    public ResponseEntity<?> enviarRequisicao(
             @RequestBody RequisicaoInputDTO dto
     ) {
-        SaveRequisicaoResponseDTO requisicaoResponse = requisicaoService.salvarRequisicao(dto);
-        atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.id_req_match());
-        return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoResponse);
+        try{
+            SaveRequisicaoResponseDTO requisicaoResponse = requisicaoService.salvarRequisicao(dto);
+            atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.id_req_match());
+            return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoResponse);
+       }catch(RuntimeException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErroResponseDTO("PROMPT_INVALIDO", e.getMessage()));
+        }
+
     }
 
     @GetMapping("/carregar")

@@ -7,16 +7,19 @@ import br.com.tucunare.apoiodigital.repository.AppSuportadoRepository;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import com.google.genai.types.*;
 import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import com.google.genai.types.Content;
+import com.google.genai.types.Part;
+import com.google.genai.types.SafetySetting;
+import com.google.genai.types.HarmCategory;
+import com.google.genai.types.HarmBlockThreshold;
+import com.google.genai.types.GenerateContentConfig;
 
 import com.google.genai.Client;
-import com.google.genai.types.Content;
-import com.google.genai.types.GenerateContentConfig;
-import com.google.genai.types.GenerateContentResponse;
-import com.google.genai.types.Part;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -63,6 +66,8 @@ public class GeminiService {
                     config
             );
             System.out.println("RESPONSE TEXT: " + response.text());
+            System.out.println("RESPONSE: " + response);
+            System.out.println("CANDIDATES: " + response.candidates());
             return response.text();
         } catch (Exception e) {
             // Handle rate limits (429) or connection issues
@@ -115,25 +120,46 @@ public class GeminiService {
     }
     //agente 0
     //o A0 valida o prompt do usuario impedindo jailbreaks e requests nocivos
-    public boolean agent0(String prompt){
-        ObjectMapper objectMapper = new ObjectMapper();
+    public boolean agent0(String prompt) {
         String rules = getRules("src/main/resources/rules/agent0-rule.txt");
-        GenerateContentConfig config = generateConfig(rules, 0.1f);
-        try{
+        GenerateContentConfig config = GenerateContentConfig.builder()
+                .responseMimeType("application/json")
+                .systemInstruction(Content.fromParts(Part.fromText(rules)))
+                .temperature(0.0f)
+                .safetySettings(List.of(
+                        SafetySetting.builder()
+                                .category(HarmCategory.Known.HARM_CATEGORY_HARASSMENT)
+                                .threshold(HarmBlockThreshold.Known.BLOCK_NONE)
+                                .build(),
+                        SafetySetting.builder()
+                                .category(HarmCategory.Known.HARM_CATEGORY_HATE_SPEECH)
+                                .threshold(HarmBlockThreshold.Known.BLOCK_NONE)
+                                .build(),
+                        SafetySetting.builder()
+                                .category(HarmCategory.Known.HARM_CATEGORY_SEXUALLY_EXPLICIT)
+                                .threshold(HarmBlockThreshold.Known.BLOCK_NONE)
+                                .build(),
+                        SafetySetting.builder()
+                                .category(HarmCategory.Known.HARM_CATEGORY_DANGEROUS_CONTENT)
+                                .threshold(HarmBlockThreshold.Known.BLOCK_NONE)
+                                .build()
+                ))
+                .build();
+
+        try {
+
+            ObjectMapper objectMapper = new ObjectMapper();
             ObjectNode json = objectMapper.createObjectNode();
             json.put("prompt", prompt);
-
             String input = json.toString();
-
             String r = analyzeText(input, config);
-
             JsonNode jsonNode = objectMapper.readTree(r);
-
-            boolean n = jsonNode.get("aprovado").asBoolean();
-            if(!n){return false;}
-            else{return true;}
-        }catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+            Boolean m = jsonNode.get("aprovado").asBoolean();
+            System.out.println(m);
+            return m;
+        } catch (JsonProcessingException e) {
+            System.out.println("AAAAAAAAAAAAA");
+            return false;
         }
     }
 
@@ -271,7 +297,7 @@ public class GeminiService {
 
         ObjectMapper objectMapper = new ObjectMapper();
 
-//        if(!agent0(dto.prompt())){return null;} // valida prompt
+        if(!agent0(dto.prompt())){throw new RuntimeException("Mensagem Inválido");} // valida prompt
 
         String prompt = agent1(dto.prompt()); // limpa prompt
 
