@@ -1,4 +1,4 @@
-package br.com.tucunare.apoiodigital.dto;
+package br.com.tucunare.apoiodigital.dto.tutorial;
 
 import br.com.tucunare.apoiodigital.enums.TiposDependecia;
 

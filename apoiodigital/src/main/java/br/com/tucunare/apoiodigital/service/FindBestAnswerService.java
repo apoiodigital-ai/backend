@@ -1,6 +1,6 @@
 package br.com.tucunare.apoiodigital.service;
 
-import br.com.tucunare.apoiodigital.dto.*;
+import br.com.tucunare.apoiodigital.dto.tutorial.*;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.genai.Client;

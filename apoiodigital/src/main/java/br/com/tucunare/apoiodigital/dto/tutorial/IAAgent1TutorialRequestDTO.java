@@ -1,5 +1,6 @@
-package br.com.tucunare.apoiodigital.dto;
+package br.com.tucunare.apoiodigital.dto.tutorial;
 
+import br.com.tucunare.apoiodigital.dto.AndroidComponentDTO;
 import br.com.tucunare.apoiodigital.enums.TiposDependecia;
 
 import java.util.List;

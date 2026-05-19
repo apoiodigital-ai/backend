@@ -1,6 +1,6 @@
-package br.com.tucunare.apoiodigital.dto;
+package br.com.tucunare.apoiodigital.dto.tutorial;
 
-import java.util.List;
+import br.com.tucunare.apoiodigital.dto.AndroidComponentDTO;
 
 public record IAAgentZTutorialRequestDTO(String contexto, String raciocinio, AndroidComponentDTO elemento) {
 }
