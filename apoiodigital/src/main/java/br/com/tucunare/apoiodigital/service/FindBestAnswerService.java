@@ -1,5 +1,8 @@
 package br.com.tucunare.apoiodigital.service;
 
+import br.com.tucunare.apoiodigital.dto.*;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.genai.Client;
 import com.google.genai.types.Content;
 import com.google.genai.types.GenerateContentConfig;
@@ -25,8 +28,11 @@ public class FindBestAnswerService {
 
     private Client client;
 
+    private static final ObjectMapper objectMapper = new ObjectMapper();
+
     @PostConstruct
     public void init() {
+
         // Initialize the client with your key
         this.client = Client.builder()
                 .apiKey(apiKey)
@@ -62,13 +68,65 @@ public class FindBestAnswerService {
         }
     }
 
-    GenerateContentConfig generateConfig(String additionalRules, Float temp){
+    GenerateContentConfig generateConfig(String rule, Float temp){
         return GenerateContentConfig.builder()
                 .responseMimeType("application/json")
                 .systemInstruction(Content.fromParts(
-                        Part.fromText(additionalRules)
+                        Part.fromText(rule)
                 )).temperature(temp)
                 .build();
+    }
+
+    <T> T agentStructure(Object request, String rulePath, float temp, Class<T> targetClass){
+        String rule = getRules(rulePath);
+
+        GenerateContentConfig config = generateConfig(rule, temp);
+
+
+        try{
+
+            String input = objectMapper.writeValueAsString(request);
+
+            String response = analyzeText(input, config);
+
+            return objectMapper.readValue(response, targetClass);
+
+        }catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    IAAgent0TutorialResponseDTO agent0 (IAAgent0TutorialRequestDTO request){
+        String rulePath = "src/main/resources/rules/tutorial/agent0-rule.txt";
+        return agentStructure(request, rulePath, 0.1f, IAAgent0TutorialResponseDTO.class);
+
+    }
+
+    IAAgent1TutorialResponseDTO agent1 (IAAgent1TutorialRequestDTO request){
+        String rulePath = "src/main/resources/rules/tutorial/agent1-rule.txt";
+        return agentStructure(request, rulePath, 0.1f, IAAgent1TutorialResponseDTO.class);
+
+    }
+
+    IAAgentYTutorialResponseDTO agentY (IAAgentYTutorialRequestDTO request){
+        String rulePath = "src/main/resources/rules/tutorial/agenty-rule.txt";
+        return agentStructure(request, rulePath, 0.1f, IAAgentYTutorialResponseDTO.class);
+
+    }
+
+    IAAgentXTutorialResponseDTO agentX (IAAgentXTutorialRequestDTO request){
+        String rulePath = "src/main/resources/rules/tutorial/agentx-rule.txt";
+        return agentStructure(request, rulePath, 0.1f, IAAgentXTutorialResponseDTO.class);
+
+
+    }
+
+    IAAgentZTutorialResponseDTO agentZ (IAAgentZTutorialRequestDTO request){
+        String rulePath = "src/main/resources/rules/tutorial/agentz-rule.txt";
+        return agentStructure(request, rulePath, 0.1f, IAAgentZTutorialResponseDTO.class);
+
+
+
     }
 
 

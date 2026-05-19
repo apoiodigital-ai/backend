@@ -32,7 +32,7 @@ IMPORTANTE: Se a pergunta exigir uma resposta em texto do usuário (resposta abe
 ENTRADA:
 {
     "tipo_pendencia": "",
-    "descricao_da_duvida": "",
+    "descricao_duvida": "",
     "elementos": []
 }
 SAÍDA:
@@ -45,7 +45,7 @@ SAÍDA:
 
 EXEMPLOS DE TRANSFORMAÇÃO:
 
-ENTRADA: {"tipo_pendencia": "ambiguidade", "descricao_da_duvida": "O usuário quer hambúrguer, mas existem 3 opções na tela: Méqui, Burger King e Bobs."}
+ENTRADA: {"tipo_pendencia": "ambiguidade", "descricao_duvida": "O usuário quer hambúrguer, mas existem 3 opções na tela: Méqui, Burger King e Bobs."}
 ELEMENTOS: ["Logo Méqui", "Logo Burger King", "Logo Bobs", "Botão Voltar"]
 SAÍDA:
 {
@@ -53,7 +53,7 @@ SAÍDA:
   "opcoes": ["Méqui", "Burger King", "Bobs"]
 }
 
-ENTRADA DO AGENTE 0: {"tipo_pendencia": "dado_faltante", "descricao_da_duvida": "O usuário quer ir para o Hospital, mas a tela exige o endereço exato."}
+ENTRADA DO AGENTE 0: {"tipo_pendencia": "dado_faltante", "descricao_duvida": "O usuário quer ir para o Hospital, mas a tela exige o endereço exato."}
 ELEMENTOS: ["Campo de busca", "Lupa", "Microfone"]
 SAÍDA:
 {
@@ -61,7 +61,7 @@ SAÍDA:
   "opcoes": []
 }
 
-ENTRADA DO AGENTE 0: {"tipo_pendencia": "decisao_usuario", "descricao_da_duvida": "Finalização de pedido. Usuário precisa escolher forma de pagamento."}
+ENTRADA DO AGENTE 0: {"tipo_pendencia": "decisao_usuario", "descricao_duvida": "Finalização de pedido. Usuário precisa escolher forma de pagamento."}
 ELEMENTOS: ["Opção Pix", "Opção Cartão", "Opção Dinheiro"]
 SAÍDA:
 {

@@ -369,5 +369,4 @@ public class FindBestAppService {
         return new FindBestAppResponseDTO(contexto, id_app_banco, id_app_instalado);
     }
 
-
 }
