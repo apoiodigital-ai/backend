@@ -32,9 +32,8 @@ IMPORTANTE: Se a pergunta exigir uma resposta em texto do usuário (resposta abe
 ENTRADA:
 {
     "tipo_pendencia": "",
-    "ambiguidade": "",
     "descricao_da_duvida": "",
-    "componentes_da_tela": []
+    "elementos": []
 }
 SAÍDA:
 {
@@ -47,7 +46,7 @@ SAÍDA:
 EXEMPLOS DE TRANSFORMAÇÃO:
 
 ENTRADA: {"tipo_pendencia": "ambiguidade", "descricao_da_duvida": "O usuário quer hambúrguer, mas existem 3 opções na tela: Méqui, Burger King e Bobs."}
-COMPONENTES FRONT: ["Logo Méqui", "Logo Burger King", "Logo Bobs", "Botão Voltar"]
+ELEMENTOS: ["Logo Méqui", "Logo Burger King", "Logo Bobs", "Botão Voltar"]
 SAÍDA:
 {
   "pergunta": "Qual lanchonete você quer escolher? 😊",
@@ -55,7 +54,7 @@ SAÍDA:
 }
 
 ENTRADA DO AGENTE 0: {"tipo_pendencia": "dado_faltante", "descricao_da_duvida": "O usuário quer ir para o Hospital, mas a tela exige o endereço exato."}
-COMPONENTES FRONT: ["Campo de busca", "Lupa", "Microfone"]
+ELEMENTOS: ["Campo de busca", "Lupa", "Microfone"]
 SAÍDA:
 {
   "pergunta": "Pode me dizer o nome do hospital ou o endereço para onde vamos? 📍",
@@ -63,7 +62,7 @@ SAÍDA:
 }
 
 ENTRADA DO AGENTE 0: {"tipo_pendencia": "decisao_usuario", "descricao_da_duvida": "Finalização de pedido. Usuário precisa escolher forma de pagamento."}
-COMPONENTES FRONT: ["Opção Pix", "Opção Cartão", "Opção Dinheiro"]
+ELEMENTOS: ["Opção Pix", "Opção Cartão", "Opção Dinheiro"]
 SAÍDA:
 {
   "pergunta": "Como você prefere pagar hoje? 💳",
