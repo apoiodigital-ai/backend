@@ -31,7 +31,7 @@ FORMATO DE SAÍDA (JSON ESTRITO):
 {
   "interromper": boolean,
   "tipo_pendencia": "ambiguidade" | "dado_faltante" | "decisao_usuario" | "nenhuma",
-  "descricao_da_duvida": "Explicação técnica detalhada sobre o que exatamente precisa ser decidido ou informado. Se 'nenhuma', justifique brevemente o motivo de seguir o fluxo."
+  "descricao_duvida": "Explicação técnica detalhada sobre o que exatamente precisa ser decidido ou informado. Se 'nenhuma', justifique brevemente o motivo de seguir o fluxo."
 }
 
 ---
@@ -42,7 +42,7 @@ EXEMPLO 1 (Múltiplos Restaurantes - Ambiguidade Real):
 {
   "interromper": true,
   "tipo_pendencia": "ambiguidade",
-  "descricao_da_duvida": "A tela de resultados apresenta 12 opções de restaurantes que atendem à busca por hambúrguer. O sistema não consegue decidir qual o usuário prefere."
+  "descricao_duvida": "A tela de resultados apresenta 12 opções de restaurantes que atendem à busca por hambúrguer. O sistema não consegue decidir qual o usuário prefere."
 }
 
 EXEMPLO 2 (Tela de Carrinho Pronta - Fluxo Livre):
@@ -56,12 +56,12 @@ EXEMPLO 3 (Campo de Endereço - Faltando Dados):
 {
   "interromper": true,
   "tipo_pendencia": "dado_faltante",
-  "descricao_da_duvida": "O aplicativo solicita o número do apartamento ou ponto de referência, informação que não consta no prompt original do usuário."
+  "descricao_duvida": "O aplicativo solicita o número do apartamento ou ponto de referência, informação que não consta no prompt original do usuário."
 }
 
 EXEMPLO 4 (Ruído Visual/Tela Inicial - Fluxo Livre):
 {
   "interromper": false,
   "tipo_pendencia": "nenhuma",
-  "descricao_da_duvida": "A tela apresenta várias categorias de comida (Pizza, Açaí, etc) e a barra de busca. Como o usuário já tem um objetivo definido, o sistema deve ignorar os elementos exploratórios e seguir interagindo com a busca, sem necessidade de consulta."
+  "descricao_duvida": "A tela apresenta várias categorias de comida (Pizza, Açaí, etc) e a barra de busca. Como o usuário já tem um objetivo definido, o sistema deve ignorar os elementos exploratórios e seguir interagindo com a busca, sem necessidade de consulta."
 }

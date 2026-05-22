@@ -42,7 +42,8 @@ public class FindBestAnswerService {
                     .user(input)
                     .options(GoogleGenAiChatOptions.builder()
                             .temperature(temp)
-                            .build())
+                            .build()
+                    )
                     .call()
                     .content();
 

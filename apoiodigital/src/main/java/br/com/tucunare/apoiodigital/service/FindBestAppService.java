@@ -8,6 +8,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatModel;
+import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.google.genai.GoogleGenAiChatOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
@@ -26,10 +29,13 @@ public class FindBestAppService {
     private AppSuportadoRepository appSuportadoRepository;
 
     private final ChatClient chatClient;
+
     private static final ObjectMapper objectMapper = new ObjectMapper();
 
     public FindBestAppService(ChatClient.Builder chatClientBuilder) {
+
         this.chatClient = chatClientBuilder.build();
+
     }
 
     private String getRules(String resourcePath) {
@@ -46,12 +52,14 @@ public class FindBestAppService {
         try {
             String input = objectMapper.writeValueAsString(request);
 
+
             String response = chatClient.prompt()
                     .system(rule)
                     .user(input)
                     .options(GoogleGenAiChatOptions.builder()
                             .temperature(temp)
-                            .build())
+                            .build()
+                    )
                     .call()
                     .content();
 
