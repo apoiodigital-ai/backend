@@ -1,6 +1,6 @@
 package br.com.tucunare.apoiodigital.enums;
 
-public enum TiposDependecia {
+public enum TiposPendencia {
     ambiguidade,
     dado_faltante,
     decisao_usuario,
