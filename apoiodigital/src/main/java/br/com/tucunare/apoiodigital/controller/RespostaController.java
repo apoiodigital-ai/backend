@@ -1,10 +1,7 @@
 package br.com.tucunare.apoiodigital.controller;
 
-import br.com.tucunare.apoiodigital.dto.IARespostaRawDTO;
-import br.com.tucunare.apoiodigital.dto.IARespostaRequestDescryptDTO;
 import br.com.tucunare.apoiodigital.dto.tutorial.*;
 import br.com.tucunare.apoiodigital.service.FindBestAnswerService;
-import br.com.tucunare.apoiodigital.service.IAService;
 import br.com.tucunare.apoiodigital.service.RespostaService;
 
 import org.springframework.http.ResponseEntity;
@@ -20,17 +17,14 @@ import java.util.UUID;
 public class RespostaController {
 
     private final RespostaService respostaService;
-    private final IAService iaService;
     private final FindBestAnswerService findBestAnswerService;
 
 
     public RespostaController(
             RespostaService respostaService,
-            IAService iaService,
             FindBestAnswerService findBestAnswerService
     ) {
         this.respostaService = respostaService;
-        this.iaService = iaService;
         this.findBestAnswerService = findBestAnswerService;
     }
 

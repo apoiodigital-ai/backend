@@ -1,6 +1,6 @@
 package br.com.tucunare.apoiodigital.controller;
 
-import br.com.tucunare.apoiodigital.dto.RefreshDTO;
+import br.com.tucunare.apoiodigital.dto.auth.RefreshDTO;
 import br.com.tucunare.apoiodigital.model.Usuario;
 import br.com.tucunare.apoiodigital.service.JwtService;
 import br.com.tucunare.apoiodigital.service.RefreshTokenService;

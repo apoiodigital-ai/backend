@@ -1,9 +1,9 @@
 package br.com.tucunare.apoiodigital.controller;
 
-import br.com.tucunare.apoiodigital.dto.ErroResponseDTO;
-import br.com.tucunare.apoiodigital.dto.RequisicaoInputDTO;
-import br.com.tucunare.apoiodigital.dto.RequisicaoResponseDTO;
-import br.com.tucunare.apoiodigital.dto.SaveRequisicaoResponseDTO;
+import br.com.tucunare.apoiodigital.dto.requisicao.ErroResponseDTO;
+import br.com.tucunare.apoiodigital.dto.requisicao.RequisicaoInputDTO;
+import br.com.tucunare.apoiodigital.dto.requisicao.RequisicaoResponseDTO;
+import br.com.tucunare.apoiodigital.dto.requisicao.SaveRequisicaoResponseDTO;
 import br.com.tucunare.apoiodigital.model.Requisicao;
 import br.com.tucunare.apoiodigital.service.AtalhoService;
 import br.com.tucunare.apoiodigital.service.RequisicaoService;
@@ -11,7 +11,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.ErrorResponseException;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;

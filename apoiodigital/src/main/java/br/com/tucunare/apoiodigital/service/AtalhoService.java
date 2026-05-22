@@ -21,18 +21,18 @@ public class AtalhoService {
     private final AtalhoRepository atalhoRepository;
     private final RequisicaoRepository requisicaoRepository;
     private final UsuarioRepository usuarioRepository;
-    private final FindBestAppService geminiService;
+    private final FindBestAppService findBestAppService;
 
 
     public AtalhoService(
             AtalhoRepository atalhoRepository,
             RequisicaoRepository requisicaoRepository,
-            UsuarioRepository usuarioRepository, FindBestAppService geminiService
+            UsuarioRepository usuarioRepository, FindBestAppService findBestAppService
     ) {
         this.atalhoRepository = atalhoRepository;
         this.requisicaoRepository = requisicaoRepository;
         this.usuarioRepository = usuarioRepository;
-        this.geminiService = geminiService;
+        this.findBestAppService = findBestAppService;
     }
 
     public Atalho findById(UUID id) {
@@ -73,7 +73,7 @@ public class AtalhoService {
             return;
         }
 
-        String titulo = geminiService.definirTituloAtalho(requisicao.getPrompt());
+        String titulo = findBestAppService.definirTituloAtalho(requisicao.getPrompt());
 
         Atalho atalho = new Atalho(requisicao, titulo);
         atalhoRepository.save(atalho);

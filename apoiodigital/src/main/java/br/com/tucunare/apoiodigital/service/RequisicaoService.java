@@ -1,6 +1,9 @@
 package br.com.tucunare.apoiodigital.service;
 
 import br.com.tucunare.apoiodigital.dto.*;
+import br.com.tucunare.apoiodigital.dto.findbestapp.FindBestAppResponseDTO;
+import br.com.tucunare.apoiodigital.dto.requisicao.RequisicaoInputDTO;
+import br.com.tucunare.apoiodigital.dto.requisicao.SaveRequisicaoResponseDTO;
 import br.com.tucunare.apoiodigital.exception.AppSuportadoNotFoundException;
 import br.com.tucunare.apoiodigital.model.AppSuportado;
 import br.com.tucunare.apoiodigital.model.Requisicao;
