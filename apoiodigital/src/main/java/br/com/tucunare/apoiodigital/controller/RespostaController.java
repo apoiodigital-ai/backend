@@ -1,8 +1,8 @@
 package br.com.tucunare.apoiodigital.controller;
 
 import br.com.tucunare.apoiodigital.dto.tutorial.*;
-import br.com.tucunare.apoiodigital.service.FindBestAnswerService;
-import br.com.tucunare.apoiodigital.service.RespostaService;
+import br.com.tucunare.apoiodigital.service.impl.FindBestAnswerService;
+import br.com.tucunare.apoiodigital.service.impl.RespostaService;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

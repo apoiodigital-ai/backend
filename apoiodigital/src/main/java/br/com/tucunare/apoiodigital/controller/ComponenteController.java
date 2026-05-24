@@ -1,7 +1,7 @@
 package br.com.tucunare.apoiodigital.controller;
 
 import br.com.tucunare.apoiodigital.model.Componente;
-import br.com.tucunare.apoiodigital.service.ComponenteService;
+import br.com.tucunare.apoiodigital.service.impl.ComponenteService;
 import br.com.tucunare.apoiodigital.dto.ComparacaoRequestDTO;
 
 import org.springframework.http.ResponseEntity;

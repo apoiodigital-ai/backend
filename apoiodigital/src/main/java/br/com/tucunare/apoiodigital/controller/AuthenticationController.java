@@ -2,9 +2,9 @@ package br.com.tucunare.apoiodigital.controller;
 
 import br.com.tucunare.apoiodigital.dto.auth.RefreshDTO;
 import br.com.tucunare.apoiodigital.model.Usuario;
-import br.com.tucunare.apoiodigital.service.JwtService;
-import br.com.tucunare.apoiodigital.service.RefreshTokenService;
-import br.com.tucunare.apoiodigital.service.UsuarioService;
+import br.com.tucunare.apoiodigital.service.impl.JwtService;
+import br.com.tucunare.apoiodigital.service.impl.RefreshTokenService;
+import br.com.tucunare.apoiodigital.service.impl.UsuarioService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

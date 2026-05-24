@@ -2,7 +2,7 @@ package br.com.tucunare.apoiodigital.controller;
 
 import br.com.tucunare.apoiodigital.model.Atalho;
 import br.com.tucunare.apoiodigital.model.Requisicao;
-import br.com.tucunare.apoiodigital.service.AtalhoService;
+import br.com.tucunare.apoiodigital.service.impl.AtalhoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,9 +1,9 @@
 package br.com.tucunare.apoiodigital.controller;
 
 import br.com.tucunare.apoiodigital.model.Usuario;
-import br.com.tucunare.apoiodigital.service.AtalhoService;
-import br.com.tucunare.apoiodigital.service.RequisicaoService;
-import br.com.tucunare.apoiodigital.service.UsuarioService;
+import br.com.tucunare.apoiodigital.service.impl.AtalhoService;
+import br.com.tucunare.apoiodigital.service.impl.RequisicaoService;
+import br.com.tucunare.apoiodigital.service.impl.UsuarioService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
