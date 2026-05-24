@@ -9,7 +9,7 @@ public class SimplifyPromptRule implements AgentRule {
 
     @Override
     public String getRule() {
-        String filepath = "src/main/resources/rules/simplifyPrompt-rule.txt";
+        String filepath = "src/main/resources/rules/findbestapp/simplify-prompt-rule.txt";
         RuleBuilder ruleBuilder = new RuleBuilder();
         return ruleBuilder.getRules(filepath);
     }

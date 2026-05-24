@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ScreenContextDefinerRule implements AgentRule {
     @Override
     public String getRule() {
-        String filepath = "src/main/resources/rules/tutorial/agentz-rule.txt";
+        String filepath = "src/main/resources/rules/tutorial/screen-context-definer-rule.txt";
         RuleBuilder ruleBuilder = new RuleBuilder();
         return ruleBuilder.getRules(filepath);
     }

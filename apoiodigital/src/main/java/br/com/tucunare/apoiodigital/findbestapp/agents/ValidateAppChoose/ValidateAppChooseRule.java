@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ValidateAppChooseRule implements AgentRule {
     @Override
     public String getRule() {
-        String filepath = "src/main/resources/rules/agent3-rule.txt";
+        String filepath = "src/main/resources/rules/findbestapp/validate-app-choose.txt";
         RuleBuilder ruleBuilder = new RuleBuilder();
         return ruleBuilder.getRules(filepath);
     }

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class PendingValidatorRule implements AgentRule {
     @Override
     public String getRule() {
-        String filepath = "src/main/resources/rules/tutorial/agent0-rule.txt";
+        String filepath = "src/main/resources/rules/tutorial/pending-validator-rule.txt";
         RuleBuilder ruleBuilder = new RuleBuilder();
         return ruleBuilder.getRules(filepath);
     }

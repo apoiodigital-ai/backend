@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class ElementSelectorRule implements AgentRule {
     @Override
     public String getRule() {
-        String filepath = "src/main/resources/rules/tutorial/agentx-rule.txt";
+        String filepath = "src/main/resources/rules/tutorial/element-selector-rule.txt";
         RuleBuilder ruleBuilder = new RuleBuilder();
         return ruleBuilder.getRules(filepath);
     }

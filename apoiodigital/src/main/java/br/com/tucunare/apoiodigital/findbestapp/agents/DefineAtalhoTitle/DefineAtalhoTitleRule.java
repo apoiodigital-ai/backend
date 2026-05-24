@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class DefineAtalhoTitleRule implements AgentRule {
     @Override
     public String getRule() {
-        String filepath = "src/main/resources/rules/defineAtalhoTitle-rule.txt";
+        String filepath = "src/main/resources/rules/findbestapp/define-atalho-title-rule.txt";
         RuleBuilder ruleBuilder = new RuleBuilder();
         return ruleBuilder.getRules(filepath);
     }

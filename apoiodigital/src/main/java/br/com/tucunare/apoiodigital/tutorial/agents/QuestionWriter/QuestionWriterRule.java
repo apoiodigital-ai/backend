@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class QuestionWriterRule implements AgentRule {
     @Override
     public String getRule() {
-        String filepath = "src/main/resources/rules/tutorial/agent1-rule.txt";
+        String filepath = "src/main/resources/rules/tutorial/question-writer-rule.txt";
         RuleBuilder ruleBuilder = new RuleBuilder();
         return ruleBuilder.getRules(filepath);
     }

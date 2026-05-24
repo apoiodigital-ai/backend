@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 public class UserAnswerValidatorRule implements AgentRule {
     @Override
     public String getRule() {
-        String filepath = "src/main/resources/rules/tutorial/agenty-rule.txt";
+        String filepath = "src/main/resources/rules/tutorial/user-answer-validator-rule.txt";
         RuleBuilder ruleBuilder = new RuleBuilder();
         return ruleBuilder.getRules(filepath);
     }
