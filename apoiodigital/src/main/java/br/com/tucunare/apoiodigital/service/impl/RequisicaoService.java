@@ -80,7 +80,7 @@ public class RequisicaoService {
 
         List<AppSuportadoToGeminiDTO> apps_banco = appSuportadoRepository.findAllApps();
         RequestInputToGeminiDTO geminiDto = new RequestInputToGeminiDTO(dto.prompt(), apps_banco, dto.lista_apps_instalados());
-        FindBestAppResponseDTO bestApp = findBestAppService.acharMelhorApp(geminiDto);
+        FindBestAppResponseDTO bestApp = findBestAppService.acharMelhorApp(geminiDto); //TODO: ANALISAR FLUXO
 
         Optional<Requisicao> p = compararRequisicoes(dto.prompt(), usuario);
         if(p.isPresent() && Objects.equals(p.get().getAppSuportado().getId(), bestApp.id_app_banco())){ // achou req semelhante
