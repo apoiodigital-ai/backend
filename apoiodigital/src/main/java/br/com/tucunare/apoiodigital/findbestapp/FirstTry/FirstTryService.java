@@ -1,4 +1,4 @@
-package br.com.tucunare.apoiodigital.findbestapp.firsttry;
+package br.com.tucunare.apoiodigital.findbestapp.FirstTry;
 
 import br.com.tucunare.apoiodigital.dto.RequestInputToGeminiDTO;
 import br.com.tucunare.apoiodigital.dto.findbestapp.IAAgent2RequestDTO;

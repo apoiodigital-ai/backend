@@ -1,9 +1,9 @@
-package br.com.tucunare.apoiodigital.findbestapp.fallback;
+package br.com.tucunare.apoiodigital.findbestapp.FallBack;
 
 import br.com.tucunare.apoiodigital.dto.AppRequestDTO;
 import br.com.tucunare.apoiodigital.dto.RequestInputToGeminiDTO;
 import br.com.tucunare.apoiodigital.dto.findbestapp.IAAgent3RequestDTO;
-import br.com.tucunare.apoiodigital.findbestapp.firsttry.FirstTryResponseDTO;
+import br.com.tucunare.apoiodigital.findbestapp.FirstTry.FirstTryResponseDTO;
 import br.com.tucunare.apoiodigital.findbestapp.agents.ValidateAppChoose.ValidateAppChooseDTO;
 import br.com.tucunare.apoiodigital.findbestapp.agents.ValidateAppChoose.ValidateAppChooseService;
 import br.com.tucunare.apoiodigital.model.AppSuportado;

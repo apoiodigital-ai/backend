@@ -3,19 +3,18 @@ package br.com.tucunare.apoiodigital.findbestapp;
 import br.com.tucunare.apoiodigital.dto.*;
 import br.com.tucunare.apoiodigital.dto.findbestapp.FindBestAppResponseDTO;
 import br.com.tucunare.apoiodigital.dto.findbestapp.GenerateContextAppDTO;
-import br.com.tucunare.apoiodigital.findbestapp.agents.DefineContext.DefineContextResponseDTO;
-import br.com.tucunare.apoiodigital.findbestapp.agents.DefineContext.DefineContextService;
-import br.com.tucunare.apoiodigital.findbestapp.fallback.FallBackResponseDTO;
-import br.com.tucunare.apoiodigital.findbestapp.fallback.FallBackService;
-import br.com.tucunare.apoiodigital.findbestapp.firsttry.FirstTryResponseDTO;
-import br.com.tucunare.apoiodigital.findbestapp.firsttry.FirstTryService;
+import br.com.tucunare.apoiodigital.findbestapp.DefineContext.DefineContextResponseDTO;
+import br.com.tucunare.apoiodigital.findbestapp.DefineContext.DefineContextService;
+import br.com.tucunare.apoiodigital.findbestapp.FallBack.FallBackResponseDTO;
+import br.com.tucunare.apoiodigital.findbestapp.FallBack.FallBackService;
+import br.com.tucunare.apoiodigital.findbestapp.FirstTry.FirstTryResponseDTO;
+import br.com.tucunare.apoiodigital.findbestapp.FirstTry.FirstTryService;
 import br.com.tucunare.apoiodigital.model.AppSuportado;
 import br.com.tucunare.apoiodigital.repository.AppSuportadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 
 @Service
 public class FindBestAppService {

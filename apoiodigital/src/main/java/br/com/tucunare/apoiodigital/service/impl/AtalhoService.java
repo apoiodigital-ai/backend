@@ -1,10 +1,7 @@
 package br.com.tucunare.apoiodigital.service.impl;
 
-import br.com.tucunare.apoiodigital.findbestapp.FindBestAppService;
 import br.com.tucunare.apoiodigital.findbestapp.agents.DefineAtalhoTitle.DefineAtalhoTitleResponseDTO;
 import br.com.tucunare.apoiodigital.findbestapp.agents.DefineAtalhoTitle.DefineAtalhoTitleService;
-import br.com.tucunare.apoiodigital.findbestapp.agents.DefineContext.DefineContextResponseDTO;
-import br.com.tucunare.apoiodigital.findbestapp.agents.DefineContext.DefineContextService;
 import br.com.tucunare.apoiodigital.model.Atalho;
 import br.com.tucunare.apoiodigital.model.Requisicao;
 import br.com.tucunare.apoiodigital.repository.AtalhoRepository;

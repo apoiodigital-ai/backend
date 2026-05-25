@@ -1,4 +1,4 @@
-package br.com.tucunare.apoiodigital.findbestapp.agents.DefineContext;
+package br.com.tucunare.apoiodigital.findbestapp.DefineContext;
 
 import br.com.tucunare.apoiodigital.agent.AgentRule;
 import br.com.tucunare.apoiodigital.agent.RuleBuilder;
