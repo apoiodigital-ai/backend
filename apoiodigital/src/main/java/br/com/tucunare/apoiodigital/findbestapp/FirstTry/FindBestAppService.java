@@ -1,11 +1,11 @@
 package br.com.tucunare.apoiodigital.findbestapp.FirstTry;
 
-import br.com.tucunare.apoiodigital.dto.findbestapp.IAAgent2RequestDTO;
 import br.com.tucunare.apoiodigital.findbestapp.agents.ChooseLocalApp.ChooseLocalAppResponseDTO;
 import br.com.tucunare.apoiodigital.findbestapp.agents.ChooseLocalApp.ChooseLocalAppService;
+import br.com.tucunare.apoiodigital.findbestapp.agents.ChooseLocalApp.ChooseLocalAppRequestDTO;
 import br.com.tucunare.apoiodigital.findbestapp.agents.SimplifyPrompt.SimplifyPromptResponseDTO;
 import br.com.tucunare.apoiodigital.findbestapp.agents.SimplifyPrompt.SimplifyPromptService;
-import br.com.tucunare.apoiodigital.model.AppSuportado;
+import br.com.tucunare.apoiodigital.appsuportado.data.AppSuportado;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -24,10 +24,10 @@ import java.util.List;
     public FindBestAppResponseDTO findBestApp(String promptRaw, List<AppSuportado> listaAppSuportado){
         SimplifyPromptResponseDTO simplifyPromptResponseDTO = simplifyPromptService.executeTask(promptRaw);
 
-        IAAgent2RequestDTO iaAgent2RequestDTO = new IAAgent2RequestDTO(
+        ChooseLocalAppRequestDTO chooseLocalAppRequestDTO = new ChooseLocalAppRequestDTO(
                 simplifyPromptResponseDTO.prompt_limpo(), listaAppSuportado);
 
-        ChooseLocalAppResponseDTO chooseLocalAppResponseDTO = chooseLocalAppService.executeTask(iaAgent2RequestDTO);
+        ChooseLocalAppResponseDTO chooseLocalAppResponseDTO = chooseLocalAppService.executeTask(chooseLocalAppRequestDTO);
 
         return new FindBestAppResponseDTO(
                 chooseLocalAppResponseDTO.id_app_banco(),

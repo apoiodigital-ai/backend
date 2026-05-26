@@ -1,6 +1,5 @@
 package br.com.tucunare.apoiodigital.tutorial;
 
-import br.com.tucunare.apoiodigital.dto.tutorial.*;
 import br.com.tucunare.apoiodigital.tutorial.agents.ElementSelector.ElementSelectorService;
 import br.com.tucunare.apoiodigital.tutorial.agents.ElementSelector.ElementSelectorRequestDTO;
 import br.com.tucunare.apoiodigital.tutorial.agents.ElementSelector.ElementSelectorResponseDTO;

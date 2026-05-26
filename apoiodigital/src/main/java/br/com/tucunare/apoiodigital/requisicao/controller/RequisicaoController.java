@@ -1,11 +1,11 @@
 package br.com.tucunare.apoiodigital.requisicao.controller;
 
-import br.com.tucunare.apoiodigital.dto.requisicao.ErroResponseDTO;
-import br.com.tucunare.apoiodigital.dto.requisicao.RequisicaoInputDTO;
-import br.com.tucunare.apoiodigital.dto.requisicao.RequisicaoResponseDTO;
-import br.com.tucunare.apoiodigital.model.Requisicao;
-import br.com.tucunare.apoiodigital.requisicao.RequisicaoService;
-import br.com.tucunare.apoiodigital.service.impl.AtalhoService;
+import br.com.tucunare.apoiodigital.handler.ErroResponseDTO;
+import br.com.tucunare.apoiodigital.requisicao.data.RequisicaoInputDTO;
+import br.com.tucunare.apoiodigital.requisicao.data.RequisicaoResponseDTO;
+import br.com.tucunare.apoiodigital.requisicao.data.Requisicao;
+import br.com.tucunare.apoiodigital.requisicao.service.RequisicaoService;
+import br.com.tucunare.apoiodigital.atalho.service.AtalhoService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;

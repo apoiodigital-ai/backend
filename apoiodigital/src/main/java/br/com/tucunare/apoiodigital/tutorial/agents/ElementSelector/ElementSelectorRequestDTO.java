@@ -1,6 +1,6 @@
 package br.com.tucunare.apoiodigital.tutorial.agents.ElementSelector;
 
-import br.com.tucunare.apoiodigital.dto.tutorial.AndroidComponentDTO;
+import br.com.tucunare.apoiodigital.tutorial.AndroidComponentDTO;
 
 import java.util.List;
 

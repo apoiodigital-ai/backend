@@ -1,7 +1,11 @@
 package br.com.tucunare.apoiodigital.handler;
 
-import br.com.tucunare.apoiodigital.dto.ExceptionDTO;
-import br.com.tucunare.apoiodigital.exception.*;
+import br.com.tucunare.apoiodigital.atalho.exception.AtalhoDoesNotExistException;
+import br.com.tucunare.apoiodigital.requisicao.exception.RequisicaoDoesNotExistException;
+import br.com.tucunare.apoiodigital.usuario.exception.InvalidCredentialsException;
+import br.com.tucunare.apoiodigital.usuario.exception.InvalidPasswordLengthException;
+import br.com.tucunare.apoiodigital.usuario.exception.TelefoneAlreayExistsException;
+import br.com.tucunare.apoiodigital.usuario.exception.UsuarioDoesNotExistException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

@@ -1,7 +1,7 @@
 package br.com.tucunare.apoiodigital.tutorial.agents.QuestionWriter;
 
-import br.com.tucunare.apoiodigital.dto.tutorial.AndroidComponentDTO;
-import br.com.tucunare.apoiodigital.enums.TiposPendencia;
+import br.com.tucunare.apoiodigital.tutorial.AndroidComponentDTO;
+import br.com.tucunare.apoiodigital.tutorial.TiposPendencia;
 
 import java.util.List;
 

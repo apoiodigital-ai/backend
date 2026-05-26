@@ -1,6 +1,5 @@
 package br.com.tucunare.apoiodigital.findbestapp.DefineContext;
 
-import br.com.tucunare.apoiodigital.dto.findbestapp.GenerateContextAppDTO;
 import org.springframework.stereotype.Service;
 
 @Service
