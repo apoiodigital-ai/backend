@@ -1,4 +1,4 @@
-package br.com.tucunare.apoiodigital.repository;
+package br.com.tucunare.apoiodigital.requisicao.repository;
 
 import br.com.tucunare.apoiodigital.model.Requisicao;
 import br.com.tucunare.apoiodigital.model.Usuario;

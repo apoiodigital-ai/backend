@@ -1,8 +1,9 @@
 package br.com.tucunare.apoiodigital.controller;
 
 import br.com.tucunare.apoiodigital.model.Usuario;
+import br.com.tucunare.apoiodigital.requisicao.InitialRequisicaoService;
 import br.com.tucunare.apoiodigital.service.impl.AtalhoService;
-import br.com.tucunare.apoiodigital.service.impl.RequisicaoService;
+import br.com.tucunare.apoiodigital.requisicao.RequisicaoService;
 import br.com.tucunare.apoiodigital.service.impl.UsuarioService;
 
 import org.springframework.http.HttpStatus;
@@ -17,16 +18,16 @@ import java.util.Map;
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final RequisicaoService requisicaoService;
+    private final InitialRequisicaoService initialRequisicaoService;
     private final AtalhoService atalhoService;
 
     public UsuarioController(
             UsuarioService usuarioService,
-            RequisicaoService requisicaoService,
+            InitialRequisicaoService initialRequisicaoService,
             AtalhoService atalhoService
     ) {
         this.usuarioService = usuarioService;
-        this.requisicaoService = requisicaoService;
+        this.initialRequisicaoService = initialRequisicaoService;
         this.atalhoService = atalhoService;
     }
 
@@ -40,7 +41,7 @@ public class UsuarioController {
         Usuario usuarioPersistido = usuarioService.salvarUsuario(usuario);
 
         var requisicoesIniciais =
-                requisicaoService.salvarRequisicoesIniciais(usuarioPersistido.getId());
+                initialRequisicaoService.salvarRequisicoesIniciais(usuarioPersistido.getId());
 
         atalhoService.salvarAtalhosIniciais(requisicoesIniciais);
 

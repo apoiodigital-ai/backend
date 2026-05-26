@@ -1,12 +1,11 @@
-package br.com.tucunare.apoiodigital.controller;
+package br.com.tucunare.apoiodigital.requisicao.controller;
 
 import br.com.tucunare.apoiodigital.dto.requisicao.ErroResponseDTO;
 import br.com.tucunare.apoiodigital.dto.requisicao.RequisicaoInputDTO;
 import br.com.tucunare.apoiodigital.dto.requisicao.RequisicaoResponseDTO;
-import br.com.tucunare.apoiodigital.dto.requisicao.SaveRequisicaoResponseDTO;
 import br.com.tucunare.apoiodigital.model.Requisicao;
+import br.com.tucunare.apoiodigital.requisicao.RequisicaoService;
 import br.com.tucunare.apoiodigital.service.impl.AtalhoService;
-import br.com.tucunare.apoiodigital.service.impl.RequisicaoService;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import org.springframework.http.HttpStatus;
@@ -29,12 +28,12 @@ public class RequisicaoController {
     }
 
     @PostMapping("/enviar")
-    public ResponseEntity<SaveRequisicaoResponseDTO> enviarRequisicao(
+    public ResponseEntity<Requisicao> enviarRequisicao(
             @RequestBody RequisicaoInputDTO dto
     ) {
         try{
-            SaveRequisicaoResponseDTO requisicaoResponse = requisicaoService.salvarRequisicao(dto);
-            atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.id_req_match());
+            Requisicao requisicaoResponse = requisicaoService.salvarRequisicao(dto);
+//            atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.id_req_match()); TODO: ANALISAR CASO PARA SER ASSINCRONO
             return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoResponse);
        }catch(RuntimeException e){
             throw new RuntimeException(e.getMessage());

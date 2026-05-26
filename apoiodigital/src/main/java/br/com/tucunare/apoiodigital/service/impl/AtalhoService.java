@@ -5,7 +5,7 @@ import br.com.tucunare.apoiodigital.findbestapp.agents.DefineAtalhoTitle.DefineA
 import br.com.tucunare.apoiodigital.model.Atalho;
 import br.com.tucunare.apoiodigital.model.Requisicao;
 import br.com.tucunare.apoiodigital.repository.AtalhoRepository;
-import br.com.tucunare.apoiodigital.repository.RequisicaoRepository;
+import br.com.tucunare.apoiodigital.requisicao.repository.RequisicaoRepository;
 import br.com.tucunare.apoiodigital.repository.UsuarioRepository;
 import br.com.tucunare.apoiodigital.exception.AtalhoDoesNotExistException;
 import br.com.tucunare.apoiodigital.exception.RequisicaoDoesNotExistException;
