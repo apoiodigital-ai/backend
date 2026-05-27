@@ -34,7 +34,8 @@ public class RequisicaoController {
     ) {
         try{
             SaveRequisicaoResponseDTO requisicaoResponse = requisicaoService.salvarRequisicao(dto);
-//            atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.id_req_match()); TODO: ANALISAR CASO PARA SER ASSINCRONO
+            atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.requisicaoMatch());
+            System.out.println("ANTES DO RETURN");
             return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoResponse);
        }catch(RuntimeException e){
             throw new RuntimeException(e.getMessage());

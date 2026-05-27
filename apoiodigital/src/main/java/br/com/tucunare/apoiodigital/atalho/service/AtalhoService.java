@@ -11,6 +11,7 @@ import br.com.tucunare.apoiodigital.usuario.repository.UsuarioRepository;
 import br.com.tucunare.apoiodigital.requisicao.exception.RequisicaoDoesNotExistException;
 import br.com.tucunare.apoiodigital.usuario.exception.UsuarioDoesNotExistException;
 
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
@@ -64,22 +65,32 @@ public class AtalhoService {
         );
     }
 
-    public void criarAtalho(Requisicao requisicao, UUID id_req_match) {
+    @Async
+    public void criarAtalho(Requisicao requisicao, Requisicao reqMatch) {
 
+        if(reqMatch != null){
 
-        if(id_req_match != null){
-            Requisicao reqMatch = requisicaoRepository.findById(id_req_match).orElseThrow(RequisicaoDoesNotExistException::new);
             Atalho opAtalho = atalhoRepository.findByRequisicao(reqMatch).orElseThrow(AtalhoDoesNotExistException::new);
-            Atalho atalho = new Atalho(requisicao, opAtalho.getTitulo());
-            atalhoRepository.save(atalho);
+            String titulo = opAtalho.getTitulo();
+            if(titulo == null || titulo.isEmpty()){
+                DefineAtalhoTitleResponseDTO defineAtalhoTitleResponseDTO = defineAtalhoTitleService.executeTask(requisicao.getPrompt());
+                titulo = defineAtalhoTitleResponseDTO.titulo();
+            }
+
+            Atalho atalho = new Atalho(requisicao, titulo);
+            Atalho atalhoPersistido = atalhoRepository.save(atalho);
+
+            System.out.println("ATALHO CRIADO! " + atalhoPersistido.getTitulo());
             return;
         }
 
         DefineAtalhoTitleResponseDTO defineAtalhoTitleResponseDTO = defineAtalhoTitleService.executeTask(requisicao.getPrompt());
 
-
         Atalho atalho = new Atalho(requisicao, defineAtalhoTitleResponseDTO.titulo());
-        atalhoRepository.save(atalho);
+        Atalho atalhoPersistido = atalhoRepository.save(atalho);
+
+        System.out.println("ATALHO CRIADO! " + atalhoPersistido.getTitulo());
+
     }
 
     public Requisicao iniciarAtalho(UUID idAtalho) {
