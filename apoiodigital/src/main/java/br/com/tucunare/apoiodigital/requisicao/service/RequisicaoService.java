@@ -5,6 +5,7 @@ import br.com.tucunare.apoiodigital.findbestapp.FirstTry.FindBestAppResponseDTO;
 import br.com.tucunare.apoiodigital.findbestapp.FirstTry.FindBestAppService;
 import br.com.tucunare.apoiodigital.appsuportado.data.AppSuportado;
 import br.com.tucunare.apoiodigital.requisicao.data.Requisicao;
+import br.com.tucunare.apoiodigital.requisicao.data.SaveRequisicaoResponseDTO;
 import br.com.tucunare.apoiodigital.usuario.data.Usuario;
 import br.com.tucunare.apoiodigital.appsuportado.repository.AppSuportadoRepository;
 import br.com.tucunare.apoiodigital.usuario.repository.UsuarioRepository;
@@ -41,7 +42,7 @@ public class RequisicaoService {
         this.compareRequisicaoService = compareRequisicaoService;
     }
 
-    public Requisicao salvarRequisicao(RequisicaoInputDTO dto){
+    public SaveRequisicaoResponseDTO salvarRequisicao(RequisicaoInputDTO dto){
         Usuario usuario = usuarioRepository.findById(dto.id_usuario())
                 .orElseThrow(UsuarioDoesNotExistException::new);
 
@@ -53,7 +54,8 @@ public class RequisicaoService {
 
         if(p.isPresent()){ // achou req semelhante
             Requisicao req = new Requisicao(usuario, dto.prompt(), p.get().getAppSuportado());
-            return requisicaoRepository.save(req);
+            Requisicao reqPersistida = requisicaoRepository.save(req);
+            return new SaveRequisicaoResponseDTO(reqPersistida, p.get());
         }
 
         // nao achou req semelhante
@@ -64,7 +66,8 @@ public class RequisicaoService {
 
         if(appSuportado.isPresent()){
             Requisicao req = new Requisicao(usuario, dto.prompt(), appSuportado.get());
-            return requisicaoRepository.save(req);
+            Requisicao reqPersistida = requisicaoRepository.save(req);
+            return new SaveRequisicaoResponseDTO(reqPersistida, null);
         }else {
             throw new RuntimeException("Gemini Falhou!!!!!! AppSuportado não existe!");
         }

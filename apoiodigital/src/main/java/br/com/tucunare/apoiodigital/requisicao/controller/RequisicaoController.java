@@ -4,6 +4,7 @@ import br.com.tucunare.apoiodigital.handler.ErroResponseDTO;
 import br.com.tucunare.apoiodigital.requisicao.data.RequisicaoInputDTO;
 import br.com.tucunare.apoiodigital.requisicao.data.RequisicaoResponseDTO;
 import br.com.tucunare.apoiodigital.requisicao.data.Requisicao;
+import br.com.tucunare.apoiodigital.requisicao.data.SaveRequisicaoResponseDTO;
 import br.com.tucunare.apoiodigital.requisicao.service.RequisicaoService;
 import br.com.tucunare.apoiodigital.atalho.service.AtalhoService;
 import io.jsonwebtoken.ExpiredJwtException;
@@ -28,11 +29,11 @@ public class RequisicaoController {
     }
 
     @PostMapping("/enviar")
-    public ResponseEntity<Requisicao> enviarRequisicao(
+    public ResponseEntity<SaveRequisicaoResponseDTO> enviarRequisicao(
             @RequestBody RequisicaoInputDTO dto
     ) {
         try{
-            Requisicao requisicaoResponse = requisicaoService.salvarRequisicao(dto);
+            SaveRequisicaoResponseDTO requisicaoResponse = requisicaoService.salvarRequisicao(dto);
 //            atalhoService.criarAtalho(requisicaoResponse.requisicao(), requisicaoResponse.id_req_match()); TODO: ANALISAR CASO PARA SER ASSINCRONO
             return ResponseEntity.status(HttpStatus.CREATED).body(requisicaoResponse);
        }catch(RuntimeException e){
