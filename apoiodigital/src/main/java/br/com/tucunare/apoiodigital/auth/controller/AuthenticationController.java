@@ -6,6 +6,7 @@ import br.com.tucunare.apoiodigital.auth.service.RefreshTokenService;
 import br.com.tucunare.apoiodigital.usuario.data.Usuario;
 import br.com.tucunare.apoiodigital.usuario.service.UsuarioService;
 
+import br.com.tucunare.apoiodigital.usuario.service.UsuarioTokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,6 +20,8 @@ public class AuthenticationController {
 
     @Autowired
     private UsuarioService usuarioService;
+    @Autowired
+    private UsuarioTokenService usuarioTokenService;
 
     @Autowired
     private JwtService jwtService;
@@ -41,7 +44,7 @@ public class AuthenticationController {
                     .body("Refresh token inválido ou expirado");
         }
 
-        Usuario usuario = usuarioService.findUserByRefreshToken(refreshToken);
+        Usuario usuario = usuarioTokenService.findUserByRefreshToken(refreshToken);
 
         String newAccessToken = jwtService.gerarToken(usuario);
 

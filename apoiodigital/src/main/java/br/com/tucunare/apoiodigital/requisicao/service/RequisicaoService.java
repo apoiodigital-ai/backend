@@ -13,6 +13,7 @@ import br.com.tucunare.apoiodigital.usuario.exception.UsuarioDoesNotExistExcepti
 
 import br.com.tucunare.apoiodigital.requisicao.repository.RequisicaoRepository;
 import br.com.tucunare.apoiodigital.usuario.service.UsuarioService;
+import br.com.tucunare.apoiodigital.usuario.service.UsuarioTokenService;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,12 +28,13 @@ public class RequisicaoService {
     private final UsuarioService usuarioService;
     private final FindBestAppService findBestAppService;
     private final CompareRequisicaoService compareRequisicaoService;
+    private final UsuarioTokenService usuarioTokenService;
 
     public RequisicaoService(
             RequisicaoRepository requisicaoRepository,
             UsuarioRepository usuarioRepository,
             AppSuportadoRepository appSuportadoRepository,
-            UsuarioService usuarioService, FindBestAppService findBestAppService, CompareRequisicaoService compareRequisicaoService
+            UsuarioService usuarioService, FindBestAppService findBestAppService, CompareRequisicaoService compareRequisicaoService, UsuarioTokenService usuarioTokenService
     ) {
         this.requisicaoRepository = requisicaoRepository;
         this.usuarioRepository = usuarioRepository;
@@ -40,6 +42,7 @@ public class RequisicaoService {
         this.usuarioService = usuarioService;
         this.findBestAppService = findBestAppService;
         this.compareRequisicaoService = compareRequisicaoService;
+        this.usuarioTokenService = usuarioTokenService;
     }
 
     public SaveRequisicaoResponseDTO salvarRequisicao(RequisicaoInputDTO dto){
@@ -76,7 +79,7 @@ public class RequisicaoService {
     }
 
     public List<Requisicao> carregarRequisicaoPeloAccessTokenUsuario(String token) {
-        Usuario usuario = usuarioService.getUsuarioByAccessToken(token);
+        Usuario usuario = usuarioTokenService.getUsuarioByAccessToken(token);
         return requisicaoRepository.findByUsuario(usuario);
     }
 

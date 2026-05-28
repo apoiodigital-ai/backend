@@ -69,23 +69,5 @@ public class UsuarioService {
         );
     }
 
-    public Usuario findUserByRefreshToken(String refreshToken) {
-        return refreshTokenService.findUserByToken(refreshToken);
-    }
 
-    public Usuario getUsuarioByAccessToken(String accessToken) {
-
-        UUID usuarioId = jwtService.getUsuarioIdByToken(accessToken);
-
-        return usuarioRepository.findById(usuarioId)
-                .orElseThrow(UsuarioDoesNotExistException::new);
-    }
-
-    public Map<String, Object> getUsuarioIdByAccessToken(String accessToken) {
-
-        Map<String, Object> response = new HashMap<>();
-        response.put("userId", jwtService.getUsuarioIdByToken(accessToken));
-
-        return response;
-    }
 }

@@ -5,6 +5,7 @@ import br.com.tucunare.apoiodigital.atalho.service.AtalhoService;
 
 import br.com.tucunare.apoiodigital.usuario.service.UsuarioService;
 import br.com.tucunare.apoiodigital.usuario.data.Usuario;
+import br.com.tucunare.apoiodigital.usuario.service.UsuarioTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,15 +20,17 @@ public class UsuarioController {
     private final UsuarioService usuarioService;
     private final InitialRequisicaoService initialRequisicaoService;
     private final AtalhoService atalhoService;
+    private final UsuarioTokenService usuarioTokenService;
 
     public UsuarioController(
             UsuarioService usuarioService,
             InitialRequisicaoService initialRequisicaoService,
-            AtalhoService atalhoService
+            AtalhoService atalhoService, UsuarioTokenService usuarioTokenService
     ) {
         this.usuarioService = usuarioService;
         this.initialRequisicaoService = initialRequisicaoService;
         this.atalhoService = atalhoService;
+        this.usuarioTokenService = usuarioTokenService;
     }
 
 //    @GetMapping("/listar")
@@ -53,7 +56,7 @@ public class UsuarioController {
             @RequestParam String token
     ) {
         return ResponseEntity.ok(
-                usuarioService.getUsuarioIdByAccessToken(token)
+                usuarioTokenService.getUsuarioIdByAccessToken(token)
         );
     }
 }
