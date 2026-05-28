@@ -3,8 +3,8 @@ package br.com.tucunare.apoiodigital.usuario.service;
 import br.com.tucunare.apoiodigital.auth.service.JwtService;
 import br.com.tucunare.apoiodigital.auth.service.RefreshTokenService;
 import br.com.tucunare.apoiodigital.auth.data.RefreshToken;
-import br.com.tucunare.apoiodigital.auth.repository.RefreshTokenRepository;
 import br.com.tucunare.apoiodigital.usuario.data.Usuario;
+import br.com.tucunare.apoiodigital.usuario.exception.InvalidPasswordLengthException;
 import br.com.tucunare.apoiodigital.usuario.exception.TelefoneAlreayExistsException;
 import br.com.tucunare.apoiodigital.usuario.exception.UsuarioDoesNotExistException;
 import br.com.tucunare.apoiodigital.usuario.repository.UsuarioRepository;
@@ -20,31 +20,23 @@ import java.util.UUID;
 public class UsuarioService {
 
     private final UsuarioRepository usuarioRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordEncryptionService passwordEncoder;
     private final JwtService jwtService;
     private final RefreshTokenService refreshTokenService;
-    private final RefreshTokenRepository refreshTokenRepository;
+    private final PasswordValidationService passwordValidationService;
 
     public UsuarioService(
             UsuarioRepository usuarioRepository,
-            PasswordEncoder passwordEncoder,
+            PasswordEncryptionService passwordEncoder,
             JwtService jwtService,
-            RefreshTokenService refreshTokenService,
-            RefreshTokenRepository refreshTokenRepository
+            RefreshTokenService refreshTokenService, PasswordValidationService passWordValidationService
+
     ) {
         this.usuarioRepository = usuarioRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.refreshTokenService = refreshTokenService;
-        this.refreshTokenRepository = refreshTokenRepository;
-    }
-
-    public List<Usuario> listar() {
-        return usuarioRepository.findAll();
-    }
-
-    private String criptografarSenha(String senha) {
-        return passwordEncoder.encode(senha);
+        this.passwordValidationService = passWordValidationService;
     }
 
     public Usuario salvarUsuario(Usuario usuario) {
@@ -53,8 +45,8 @@ public class UsuarioService {
             throw new TelefoneAlreayExistsException();
         }
 
-        usuario.validarSenha();
-        usuario.setSenha(criptografarSenha(usuario.getSenha()));
+        if(!passwordValidationService.validar(usuario.getSenha())) throw new InvalidPasswordLengthException();
+        usuario.setSenha(passwordEncoder.criptografar(usuario.getSenha()));
 
         return usuarioRepository.save(usuario);
     }
@@ -64,7 +56,7 @@ public class UsuarioService {
         Usuario usuario = usuarioRepository.findByTelefone(telefone)
                 .orElseThrow(UsuarioDoesNotExistException::new);
 
-        if (!passwordEncoder.matches(senha, usuario.getSenha())) {
+        if (!passwordEncoder.validar(senha, usuario.getSenha())) {
             throw new UsuarioDoesNotExistException();
         }
 

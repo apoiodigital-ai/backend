@@ -28,8 +28,11 @@ public class Usuario {
     @Column(name = "senha")
     private String senha;
 
-    public void validarSenha(){
-        if(this.senha.length() < 8) throw new InvalidPasswordLengthException();
-    }
 
+    public Usuario(String nome, String telefone, String senha) {
+        this.id = UUID.randomUUID();
+        this.nome = nome;
+        this.telefone = telefone;
+        this.senha = senha;
+    }
 }

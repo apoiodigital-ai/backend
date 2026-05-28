@@ -46,7 +46,6 @@ public class RequisicaoService {
         Usuario usuario = usuarioRepository.findById(dto.id_usuario())
                 .orElseThrow(UsuarioDoesNotExistException::new);
 
-        List<AppSuportado> apps_banco = appSuportadoRepository.findAll();
 
         //RequestInputToGeminiDTO geminiDto = new RequestInputToGeminiDTO(dto.prompt(), apps_banco, dto.lista_apps_instalados());
 
@@ -57,6 +56,8 @@ public class RequisicaoService {
             Requisicao reqPersistida = requisicaoRepository.save(req);
             return new SaveRequisicaoResponseDTO(reqPersistida, p.get());
         }
+
+        List<AppSuportado> apps_banco = appSuportadoRepository.findAll();
 
         // nao achou req semelhante
 

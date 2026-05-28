@@ -30,10 +30,10 @@ public class UsuarioController {
         this.atalhoService = atalhoService;
     }
 
-    @GetMapping("/listar")
-    public ResponseEntity<List<Usuario>> listar() {
-        return ResponseEntity.ok(usuarioService.listar());
-    }
+//    @GetMapping("/listar")
+//    public ResponseEntity<List<Usuario>> listar() {
+//        return ResponseEntity.ok(usuarioService.listar());
+//    }
 
     @PostMapping("/salvar")
     public ResponseEntity<Usuario> criarConta(@RequestBody Usuario usuario) {

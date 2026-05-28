@@ -23,8 +23,7 @@ public class FindBestAnswerService {
     public FindBestAnswerResponseDTO findBestAnswer(ElementSelectorRequestDTO request){
         ElementSelectorResponseDTO agenteXresponse = elementSelectorService.executeTask(request);
         ScreenContextDefinerResponseDTO agenteZresponse = screenContextDefinerService.executeTask(
-                new
-                        ScreenContextDefinerRequestDTO(request.contexto(),
+                new ScreenContextDefinerRequestDTO(request.contexto(),
                         agenteXresponse.raciocinio(),
                         request.elementos().get(agenteXresponse.viewID())) // pega elemento destacado
         );
