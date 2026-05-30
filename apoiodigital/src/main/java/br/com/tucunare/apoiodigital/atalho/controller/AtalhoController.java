@@ -17,7 +17,6 @@ public class AtalhoController {
     @Autowired
     private AtalhoService atalhoService;
 
-
     @PostMapping("/iniciar")
     public ResponseEntity<Requisicao> iniciarAtalho(@RequestParam UUID id_atalho) {
         return ResponseEntity.ok(atalhoService.iniciarAtalho(id_atalho));
@@ -27,4 +26,5 @@ public class AtalhoController {
     public ResponseEntity<List<Atalho>> carregarAtalhos(@RequestParam UUID id_usuario) {
         return ResponseEntity.ok(atalhoService.carregarAtalhos(id_usuario));
     }
+
 }

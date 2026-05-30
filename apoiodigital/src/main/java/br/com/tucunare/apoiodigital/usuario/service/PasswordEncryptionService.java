@@ -1,7 +1,9 @@
 package br.com.tucunare.apoiodigital.usuario.service;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 
+@Service
 public class PasswordEncryptionService {
     private final PasswordEncoder passwordEncoder;
 
