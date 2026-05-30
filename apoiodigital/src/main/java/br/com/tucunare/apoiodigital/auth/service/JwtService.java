@@ -35,12 +35,9 @@ public class JwtService {
     }
 
     public String gerarToken(Usuario usuario) {
-        return Jwts.builder()
-                .setSubject(usuario.getId().toString())
+        return Jwts.builder().subject(usuario.getId().toString())
                 .claim("nome", usuario.getNome())
-                .claim("telefone", usuario.getTelefone())
-                .setIssuedAt(new Date())
-                .setExpiration(
+                .claim("telefone", usuario.getTelefone()).issuedAt(new Date()).expiration(
                         new Date(System.currentTimeMillis() + expirationMs)
                 )
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

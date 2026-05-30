@@ -57,6 +57,10 @@ public class RequisicaoService {
         if(p.isPresent()){ // achou req semelhante
             Requisicao req = new Requisicao(usuario, dto.prompt(), p.get().getAppSuportado());
             Requisicao reqPersistida = requisicaoRepository.save(req);
+
+            System.out.println("PROMPT: " + req.getPrompt());
+            System.out.println("APP: " + req.getAppSuportado());
+
             return new SaveRequisicaoResponseDTO(reqPersistida, p.get());
         }
 
@@ -71,6 +75,10 @@ public class RequisicaoService {
         if(appSuportado.isPresent()){
             Requisicao req = new Requisicao(usuario, dto.prompt(), appSuportado.get());
             Requisicao reqPersistida = requisicaoRepository.save(req);
+
+            System.out.println("PROMPT: " + req.getPrompt());
+            System.out.println("APP: " + req.getAppSuportado());
+
             return new SaveRequisicaoResponseDTO(reqPersistida, null);
         }else {
             throw new RuntimeException("Gemini Falhou!!!!!! AppSuportado não existe!");
