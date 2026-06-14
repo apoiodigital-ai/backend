@@ -26,6 +26,8 @@ public class InformationNeedsService {
                         PendingValidatorRequestDTO(requestDTO.prompt(),
                         requestDTO.contexto(), requestDTO.elementos()));
 
+
+        System.out.println("INTERROMPER: " + agente0Response.interromper());
         if(agente0Response.interromper()){
             QuestionWriterResponseDTO agente1response = questionWriterService.executeTask(
                     new QuestionWriterRequestDTO(

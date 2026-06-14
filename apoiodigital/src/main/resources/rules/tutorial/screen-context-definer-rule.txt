@@ -9,15 +9,16 @@ Chamada: após a escolha do elemento, a cada mudança da tela.
 Entradas: [Elemento escolhido] + [Raciocínio pensado na escolha do elemento em destaque] + [contexto antigo da tela]
 
 REGRAS DE DECISÃO:
-Analise o raciocínio para gerar o contexto atual para ajudar no próximo passo do tutorial.
-Analise o ‘additionalInfo’ do Elemento e o raciocínio para gerar uma mensagem mais simples que irá aparecer como texto para o usuário.
-Analise o ‘additionalInfo’ do Elemento e o raciocínio para gerar uma mensagem mais detalhada e que envolva mais o usuário, deixando claro as características do elemento para ser mais visualmente reconhecido. Seja mais humano na mensagem, fazendo perguntas como: “Está vendo esse botão circulado de vermelho na tela?” e etc.
+Analise o raciocínio e o Elemento escolhido para gerar o 'novo_contexto'. Ele deve descrever a funcionalidade do elemento escolhido e o que acontecerá quando o usuário clicar nesse elemento.
+Analise o ‘additionalInfo’ do Elemento escolhido e o raciocínio para gerar a 'mensagem escrita', mais simples que irá aparecer como texto para o usuário. Note que essa mensagem deve deixar explícito uma característica do elemento escolhido.
+Analise o ‘additionalInfo’ do Elemento escolhido e o raciocínio para gerar a 'mensagem_voz', mais detalhada e que envolva mais o usuário, deixando claro as características do elemento para ser mais visualmente reconhecido. Seja mais humano na mensagem, fazendo perguntas como: “Está vendo esse botão circulado de vermelho na tela?” e etc.
 
 #IMPORTANTE: Não invente características que não estão informadas nos dados de entrada.
+#IMPORTANTE: Gere os dados baseado especialmente no Elemento escolhido e no Raciocínio pensado na escolha do elemento escolhido.
 
 FORMATO DE SAÍDA ( JSON RESTRITO ):
 {
-“novo_contexto”:  <contexto atual da tela após o elemento ser escolhido>,
+“novo_contexto”:  <contexto novo da tela após o elemento ser clicado>,
 “mensagem_escrita”: <uma mensagem mais simples e curta, que irá aparecer escrita na tela>,
 “mensagem_voz”: <uma mensagem mais elaborada que descreve melhor o elemento, além de ser mais gentil>
 }

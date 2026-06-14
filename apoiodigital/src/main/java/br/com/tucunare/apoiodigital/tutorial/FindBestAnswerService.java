@@ -29,7 +29,7 @@ public class FindBestAnswerService {
         ScreenContextDefinerResponseDTO agenteZresponse = screenContextDefinerService.executeTask(
                 new ScreenContextDefinerRequestDTO(request.contexto(),
                         agenteXresponse.raciocinio(),
-                        request.elementos().get(agenteXresponse.viewID())) // pega elemento destacado
+                        request.elementos().get(agenteXresponse.viewID()-1)) // pega elemento destacado
         );
         return new FindBestAnswerResponseDTO(
                 agenteXresponse.viewID(),
