@@ -1,5 +1,6 @@
 package br.com.tucunare.apoiodigital.tutorial.InformationNeeds;
 
+import br.com.tucunare.apoiodigital.tutorial.agents.UserAnswerValidator.AgentResponseDTO;
 import br.com.tucunare.apoiodigital.tutorial.agents.UserAnswerValidator.UserAnswerValidatorRequestDTO;
 import br.com.tucunare.apoiodigital.tutorial.agents.UserAnswerValidator.UserAnswerValidatorResponseDTO;
 import br.com.tucunare.apoiodigital.tutorial.agents.UserAnswerValidator.UserAnswerValidatorService;
@@ -14,6 +15,13 @@ public class InformationResponseService {
     }
 
     public UserAnswerValidatorResponseDTO checksQuestionReturns(UserAnswerValidatorRequestDTO request){
-        return userAnswerValidatorService.executeTask(request);
+        AgentResponseDTO response = userAnswerValidatorService.executeTask(request);
+
+        return new UserAnswerValidatorResponseDTO(
+                response.pergunta(),
+                response.satisfaz(),
+                request.pergunta(),
+                request.resposta_escrita()
+        );
     }
 }

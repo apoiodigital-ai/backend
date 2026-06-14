@@ -44,6 +44,13 @@ public class RespostaController {
             @RequestBody ElementSelectorRequestDTO request
     ) {
         FindBestAnswerResponseDTO response = findBestAnswerService.findBestAnswer(request);
+
+        System.out.println("REQUEST CONTEXTO: " + request.contexto());
+        System.out.println("REQUEST PROMPT: " + request.prompt());
+
+        System.out.println("RESPONSE MENSAGEM: " + response.mensagem_escrita());
+        System.out.println("RESPONSE CONTEXTO: " + response.novo_contexto());
+
         return ResponseEntity.ok(response);
     }
 

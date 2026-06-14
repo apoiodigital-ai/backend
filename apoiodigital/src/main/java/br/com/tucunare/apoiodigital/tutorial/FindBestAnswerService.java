@@ -6,6 +6,7 @@ import br.com.tucunare.apoiodigital.tutorial.agents.ElementSelector.ElementSelec
 import br.com.tucunare.apoiodigital.tutorial.agents.ScreenContextDefiner.ScreenContextDefinerRequestDTO;
 import br.com.tucunare.apoiodigital.tutorial.agents.ScreenContextDefiner.ScreenContextDefinerResponseDTO;
 import br.com.tucunare.apoiodigital.tutorial.agents.ScreenContextDefiner.ScreenContextDefinerService;
+import com.google.gson.Gson;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,6 +22,9 @@ public class FindBestAnswerService {
     }
 
     public FindBestAnswerResponseDTO findBestAnswer(ElementSelectorRequestDTO request){
+        Gson gson = new Gson();
+        System.out.println(gson.toJson(request));
+
         ElementSelectorResponseDTO agenteXresponse = elementSelectorService.executeTask(request);
         ScreenContextDefinerResponseDTO agenteZresponse = screenContextDefinerService.executeTask(
                 new ScreenContextDefinerRequestDTO(request.contexto(),

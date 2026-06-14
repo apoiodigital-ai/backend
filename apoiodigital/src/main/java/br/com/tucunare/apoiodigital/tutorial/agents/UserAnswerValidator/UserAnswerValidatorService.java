@@ -22,10 +22,10 @@ public class UserAnswerValidatorService implements TaskAgent {
     }
 
     @Override
-    public UserAnswerValidatorResponseDTO executeTask(Object request) {
+    public AgentResponseDTO executeTask(Object request) {
         String rule = userAnswerValidatorRule.getRule();
         String prompt = promptBuilder.build(request);
         String responseRaw = llmProvider.generateText(rule, prompt, 0.1);
-        return responseBuilder.build(responseRaw, UserAnswerValidatorResponseDTO.class);
+        return responseBuilder.build(responseRaw, AgentResponseDTO.class);
     }
 }

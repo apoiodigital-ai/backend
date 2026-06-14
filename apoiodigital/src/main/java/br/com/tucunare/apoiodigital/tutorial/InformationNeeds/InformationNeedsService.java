@@ -33,6 +33,7 @@ public class InformationNeedsService {
                             agente0Response.descricao_duvida(),
                             requestDTO.elementos()));
             return new ChecksInformationNeedsResponseDTO(
+                    requestDTO.contexto(),
                     agente1response.pergunta(),
                     agente1response.opcoes(),
                     agente0Response.tipo_pendencia(),
