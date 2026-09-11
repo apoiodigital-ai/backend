@@ -1,15 +1,12 @@
 package br.com.tucunare.apoiodigital.resposta.controller;
 
+import br.com.tucunare.apoiodigital.cliente.data.Cliente;
+import br.com.tucunare.apoiodigital.resposta.data.*;
+import br.com.tucunare.apoiodigital.resposta.service.AcharRespostaService;
+import br.com.tucunare.apoiodigital.resposta.service.NecessidadeInformacoesService;
+import br.com.tucunare.apoiodigital.resposta.service.RespostaNecessidadeService;
 import br.com.tucunare.apoiodigital.resposta.service.RespostaService;
-import br.com.tucunare.apoiodigital.tutorial.*;
-
-import br.com.tucunare.apoiodigital.tutorial.InformationNeeds.ChecksInformationNeedsRequestDTO;
-import br.com.tucunare.apoiodigital.tutorial.InformationNeeds.ChecksInformationNeedsResponseDTO;
-import br.com.tucunare.apoiodigital.tutorial.InformationNeeds.InformationNeedsService;
-import br.com.tucunare.apoiodigital.tutorial.InformationNeeds.InformationResponseService;
-import br.com.tucunare.apoiodigital.tutorial.agents.ElementSelector.ElementSelectorRequestDTO;
-import br.com.tucunare.apoiodigital.tutorial.agents.UserAnswerValidator.UserAnswerValidatorRequestDTO;
-import br.com.tucunare.apoiodigital.tutorial.agents.UserAnswerValidator.UserAnswerValidatorResponseDTO;
+import br.com.tucunare.apoiodigital.security.TenantContext;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,70 +14,66 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
-
+/**
+ * The three SDK-facing agent-pipeline endpoints, plus a history lookup. Every method resolves
+ * the calling tenant via {@link TenantContext} (populated by the x-api-key filter) and passes it
+ * down so userId/idPedido/idResposta are validated against that tenant before anything is read
+ * or written — see the individual services for where each id is actually checked.
+ */
 @RestController
 @RequestMapping("/resposta")
 public class RespostaController {
 
     private final RespostaService respostaService;
-    private final FindBestAnswerService findBestAnswerService;
-    private final InformationNeedsService informationNeedsService;
-    private final InformationResponseService informationResponseService;
-
+    private final NecessidadeInformacoesService necessidadeInformacoesService;
+    private final RespostaNecessidadeService respostaNecessidadeService;
+    private final AcharRespostaService acharRespostaService;
+    private final TenantContext tenantContext;
 
     public RespostaController(
             RespostaService respostaService,
-            FindBestAnswerService findBestAnswerService, InformationNeedsService informationNeedsService, InformationResponseService informationResponseService
+            NecessidadeInformacoesService necessidadeInformacoesService,
+            RespostaNecessidadeService respostaNecessidadeService,
+            AcharRespostaService acharRespostaService,
+            TenantContext tenantContext
     ) {
         this.respostaService = respostaService;
-        this.findBestAnswerService = findBestAnswerService;
-        this.informationNeedsService = informationNeedsService;
-        this.informationResponseService = informationResponseService;
+        this.necessidadeInformacoesService = necessidadeInformacoesService;
+        this.respostaNecessidadeService = respostaNecessidadeService;
+        this.acharRespostaService = acharRespostaService;
+        this.tenantContext = tenantContext;
     }
 
-
-    @PostMapping("/achar-resposta")
-    public ResponseEntity<FindBestAnswerResponseDTO> acharMelhorResposta(
-            @RequestBody ElementSelectorRequestDTO request
-    ) {
-        FindBestAnswerResponseDTO response = findBestAnswerService.findBestAnswer(request);
-
-        System.out.println("REQUEST CONTEXTO: " + request.contexto());
-        System.out.println("REQUEST PROMPT: " + request.prompt());
-
-        System.out.println("RESPONSE MENSAGEM: " + response.mensagem_escrita());
-        System.out.println("RESPONSE CONTEXTO: " + response.novo_contexto());
-
-        return ResponseEntity.ok(response);
-    }
-
-
-    @GetMapping("/listar/{idReq}")
-    public ResponseEntity<List<Map<String, String>>> carregarRespostas(
-            @PathVariable UUID idReq
-    ) {
-        return ResponseEntity.ok(
-                respostaService.listarRespostaPorRequisicao(idReq)
-        );
-    }
-
-
+    /** Gatekeeper (Agente 0) + QuestionWriter (Agente 1). */
     @PostMapping("/validar/necessidade-informacoes")
-    public ResponseEntity<ChecksInformationNeedsResponseDTO> checksInformationNeeds(
-            @RequestBody ChecksInformationNeedsRequestDTO requestDTO
+    public ResponseEntity<NecessidadeInformacoesResponseDTO> validarNecessidadeInformacoes(
+            @RequestBody NecessidadeInformacoesRequestDTO request
     ) {
-        ChecksInformationNeedsResponseDTO response = informationNeedsService.checksInformationNeeds(requestDTO);
-        return ResponseEntity.ok(response);
+        Cliente cliente = tenantContext.getClienteAtual();
+        return ResponseEntity.ok(necessidadeInformacoesService.validar(request, cliente));
     }
 
-
+    /** Answer validator (Agente Y), continuing/closing the clarification loop for a Pedido. */
     @PostMapping("/validar/resposta-necessidade")
-    public ResponseEntity<UserAnswerValidatorResponseDTO> checksQuestionReturns(
-            @RequestBody UserAnswerValidatorRequestDTO request
+    public ResponseEntity<RespostaNecessidadeResponseDTO> validarRespostaNecessidade(
+            @RequestBody RespostaNecessidadeRequestDTO request
     ) {
-        UserAnswerValidatorResponseDTO response = informationResponseService.checksQuestionReturns(request);
-        if (!response.satisfaz()) return ResponseEntity.badRequest().body(response);
-        return ResponseEntity.ok(response);
+        Cliente cliente = tenantContext.getClienteAtual();
+        return ResponseEntity.ok(respostaNecessidadeService.validar(request, cliente));
     }
 
+    /** ElementSelector (Agente X) + ScreenContextDefiner (Agente Z) + TTS. */
+    @PostMapping("/achar-resposta")
+    public ResponseEntity<AcharRespostaResponseDTO> acharResposta(
+            @RequestBody AcharRespostaRequestDTO request
+    ) {
+        Cliente cliente = tenantContext.getClienteAtual();
+        return ResponseEntity.ok(acharRespostaService.acharResposta(request, cliente));
+    }
+
+    @GetMapping("/listar/{idPedido}")
+    public ResponseEntity<List<Map<String, String>>> listarRespostas(@PathVariable UUID idPedido) {
+        Cliente cliente = tenantContext.getClienteAtual();
+        return ResponseEntity.ok(respostaService.listarRespostaPorPedido(idPedido, cliente));
+    }
 }

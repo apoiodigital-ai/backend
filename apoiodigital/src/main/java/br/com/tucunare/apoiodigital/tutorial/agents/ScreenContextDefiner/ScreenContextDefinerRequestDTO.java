@@ -1,6 +1,6 @@
 package br.com.tucunare.apoiodigital.tutorial.agents.ScreenContextDefiner;
 
-import br.com.tucunare.apoiodigital.tutorial.AndroidComponentDTO;
+import br.com.tucunare.apoiodigital.agent.AndroidComponentDTO;
 
-public record ScreenContextDefinerRequestDTO(String contexto, String raciocinio, AndroidComponentDTO elemento) {
+public record ScreenContextDefinerRequestDTO(String prompt, String raciocinio, AndroidComponentDTO elemento) {
 }
