@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.JdbcTypeCode;
 import org.hibernate.type.SqlTypes;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 /**
@@ -16,6 +14,14 @@ import java.util.UUID;
  * every downstream Pedido/Resposta/Componente is reachable only through the Cliente that owns
  * it. Requests are authenticated by presenting {@link #accessKey} in the {@code x-api-key}
  * header (see {@code br.com.tucunare.apoiodigital.security}).
+ *
+ * <p>Its one-to-many Usuario and Personalizacao rows are looked up via their own repositories
+ * (e.g. {@code PersonalizacaoRepository#findByClienteId}) rather than mapped as a Java
+ * collection here: this entity is also the Spring Security principal placed in the security
+ * context by ApiKeyAuthenticationFilter, and a bidirectional Lombok {@code @Data} collection
+ * back-reference (Cliente -> Personalizacao -> Cliente -> ...) would make any accidental
+ * equals/hashCode/toString call — including ones outside this codebase's control, such as
+ * framework debug logging of the authenticated principal — recurse infinitely.</p>
  */
 @Entity
 @Data
@@ -37,9 +43,6 @@ public class Cliente {
 
     @Column(name = "area_atuacao")
     private String areaAtuacao;
-
-    @OneToMany(mappedBy = "cliente")
-    private List<Personalizacao> personalizacoes = new ArrayList<>();
 
     public Cliente(String nome, String accessKey, String areaAtuacao) {
         this.nome = nome;
