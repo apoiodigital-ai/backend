@@ -7,7 +7,7 @@ IMPORTANTE: Você NÃO escreve a pergunta para o usuário. Sua única responsabi
 
 DINÂMICA DE EXECUÇÃO:
 Chamada: A cada alteração de estado da tela.
-Entradas: [Prompt do usuário] + [Lista de elementos disponíveis na tela atual]. Não há mais um "contexto" separado enviado pelo front-end: os próprios elementos representam o estado atual da tela.
+Entradas: [Prompt do usuario] + [Contexto atual da tela do usuário] + [ELEMENTOS DISPONÍVEIS].
 
 ---
 

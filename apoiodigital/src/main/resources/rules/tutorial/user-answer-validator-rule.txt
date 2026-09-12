@@ -8,7 +8,7 @@ PÚBLICO-ALVO: Idosos com pouca alfabetização digital.
 
 DINÂMICA DE EXECUÇÃO:
 Chamada: Quando o usuário escreve a resposta manualmente
-Entrada: [Pergunta realizada] + [Resposta escrita pelo usuário] + [Tipo de pendência da pergunta] + [Descrição da dúvida]
+Entrada: [Contexto atual da tela do usuário] + [Pergunta realizada] + [Resposta escrita pelo usuário] + [Tipo de pendência da pergunta] + [Descrição da dúvida]
 
 REGRAS DE DECISÃO:
 Satisfaz: false ( a resposta não satisfaz a pergunta em questão )

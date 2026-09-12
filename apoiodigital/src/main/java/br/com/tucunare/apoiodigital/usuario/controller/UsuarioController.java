@@ -1,36 +1,62 @@
 package br.com.tucunare.apoiodigital.usuario.controller;
 
-import br.com.tucunare.apoiodigital.cliente.data.Cliente;
-import br.com.tucunare.apoiodigital.security.TenantContext;
-import br.com.tucunare.apoiodigital.usuario.data.RegistrarUsuarioRequestDTO;
-import br.com.tucunare.apoiodigital.usuario.data.Usuario;
+import br.com.tucunare.apoiodigital.requisicao.service.InitialRequisicaoService;
+import br.com.tucunare.apoiodigital.atalho.service.AtalhoService;
+
 import br.com.tucunare.apoiodigital.usuario.service.UsuarioService;
+import br.com.tucunare.apoiodigital.usuario.data.Usuario;
+import br.com.tucunare.apoiodigital.usuario.service.UsuarioTokenService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
 
     private final UsuarioService usuarioService;
-    private final TenantContext tenantContext;
+    private final InitialRequisicaoService initialRequisicaoService;
+    private final AtalhoService atalhoService;
+    private final UsuarioTokenService usuarioTokenService;
 
-    public UsuarioController(UsuarioService usuarioService, TenantContext tenantContext) {
+    public UsuarioController(
+            UsuarioService usuarioService,
+            InitialRequisicaoService initialRequisicaoService,
+            AtalhoService atalhoService, UsuarioTokenService usuarioTokenService
+    ) {
         this.usuarioService = usuarioService;
-        this.tenantContext = tenantContext;
+        this.initialRequisicaoService = initialRequisicaoService;
+        this.atalhoService = atalhoService;
+        this.usuarioTokenService = usuarioTokenService;
     }
 
-    /**
-     * Called by CaneSDK.registerUser() on the partner's side. The partner has already
-     * anonymized whatever identifies the end user on their side; we just mint an id for them,
-     * scoped to the authenticated Cliente (resolved from x-api-key), and hand it back so the
-     * SDK can use it as userId in every subsequent call.
-     */
-    @PostMapping("/registrar")
-    public ResponseEntity<Usuario> registrar(@RequestBody RegistrarUsuarioRequestDTO request) {
-        Cliente cliente = tenantContext.getClienteAtual();
-        Usuario usuario = usuarioService.registrar(request.nome(), cliente);
-        return ResponseEntity.status(HttpStatus.CREATED).body(usuario);
+//    @GetMapping("/listar")
+//    public ResponseEntity<List<Usuario>> listar() {
+//        return ResponseEntity.ok(usuarioService.listar());
+//    }
+
+    @PostMapping("/salvar")
+    public ResponseEntity<Usuario> criarConta(@RequestBody Usuario usuario) {
+        Usuario usuarioPersistido = usuarioService.salvarUsuario(usuario);
+
+        var requisicoesIniciais =
+                initialRequisicaoService.salvarRequisicoesIniciais(usuarioPersistido.getId());
+
+        atalhoService.salvarAtalhosIniciais(requisicoesIniciais);
+
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(usuarioPersistido);
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<Map<String, Object>> buscarUsuarioPorToken(
+            @RequestParam String token
+    ) {
+        return ResponseEntity.ok(
+                usuarioTokenService.getUsuarioIdByAccessToken(token)
+        );
     }
 }

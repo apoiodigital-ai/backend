@@ -1,6 +1,6 @@
 package br.com.tucunare.apoiodigital.resposta.data;
 
-import br.com.tucunare.apoiodigital.pedido.data.Pedido;
+import br.com.tucunare.apoiodigital.requisicao.data.Requisicao;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
@@ -12,16 +12,9 @@ import org.hibernate.type.SqlTypes;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-/**
- * The final instruction produced for a Pedido. {@link #raciocinio} is the internal
- * reasoning/audit trail behind that instruction (the ElementSelector agent's own explanation of
- * why it picked a given element) — it was entirely missing before this refactor even though it
- * is what backs the product's "auditoria e rastreabilidade total" (full audit trail) claim.
- * {@link #mensagem} remains the user-facing text, unchanged in meaning from before.
- */
 @Entity
 @Data
-@Table(name = "resposta")
+@Table(name = "Resposta")
 @NoArgsConstructor
 public class Resposta {
 
@@ -31,25 +24,22 @@ public class Resposta {
     @JdbcTypeCode(SqlTypes.VARCHAR)
     private UUID id;
 
-    @ManyToOne(optional = false)
-    @JoinColumn(name = "id_pedido", nullable = false)
+    @ManyToOne
+    @JoinColumn(name = "id_requisicao")
+    @JdbcTypeCode(SqlTypes.VARCHAR)
     @JsonIgnore
-    private Pedido pedido;
+    private Requisicao requisicao;
 
-    @Column(name = "mensagem", columnDefinition = "TEXT")
+    @Column(name = "mensagem")
     private String mensagem;
 
-    @Column(name = "raciocinio", columnDefinition = "TEXT")
-    private String raciocinio;
+    @Column(name="criacao")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy hh:mm:ss")
+    private LocalDateTime criacao;
 
-    @Column(name = "timestamp")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd-MM-yyyy HH:mm:ss")
-    private LocalDateTime timestamp;
-
-    public Resposta(Pedido pedido, String mensagem, String raciocinio) {
-        this.pedido = pedido;
+    public Resposta(Requisicao requisicao, String mensagem) {
+        this.requisicao = requisicao;
         this.mensagem = mensagem;
-        this.raciocinio = raciocinio;
-        this.timestamp = LocalDateTime.now();
+        criacao = LocalDateTime.now();
     }
 }
